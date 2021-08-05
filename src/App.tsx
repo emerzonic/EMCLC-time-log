@@ -8,12 +8,6 @@ import { NavBar } from './NavBar';
 
 function App() {
   const [manageStudents, useManageStudents] = useState(false);
-  const [setView, useSetView] = useState(true);
-
-  useEffect(() => {
-
-  }, [])
-
 
   return (
     <div className="App">
@@ -25,7 +19,7 @@ function App() {
           <button type="button" className="btn btn-secondary btn-lg mx-2">Manage Students</button>
         </div>
       </header>
-      <div className="container-fluid border mt-3 px-0">
+      <div className="container-fluid border mt-3 px-4">
         {!manageStudents && <CurrentTimeLogs />}
         {manageStudents && <ManageStudents />}
       </div>

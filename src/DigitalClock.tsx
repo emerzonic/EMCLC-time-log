@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { getCurrentTime } from './dateUtil';
 
 export function DigitalClock() {
   const [clock, setClock] = useState('');
 
   const startTime = () => {
-    setClock(new Date().toLocaleTimeString('en-US'));
-    setTimeout(startTime, 1000);
+    setClock(getCurrentTime());
+    setTimeout(startTime, 10000);
   };
 
   useEffect(() => {
