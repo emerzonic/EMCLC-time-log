@@ -11,6 +11,7 @@ export function DigitalClock() {
 
   useEffect(() => {
     startTime();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 

@@ -41,3 +41,9 @@ export interface Student {
 export interface LooksLikeObject {
   [key: string]: any;
 }
+
+export enum StorageKeys {
+  ACTION_PAYLOAD = '__$actionPayload',
+  TIME_LOGS = '__$timelogs',
+  STUDENT_LIST = '__$studentList',
+}

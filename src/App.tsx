@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AddStudentModal } from './AddStudentModal';
 import { AddTimeLogModal } from './AddTimeLogModal';
 import './App.css';
@@ -7,7 +7,7 @@ import { ManageStudents } from './ManageStudents';
 import { NavBar } from './NavBar';
 
 function App() {
-  const [manageStudents, useManageStudents] = useState(false);
+  const [manageStudents] = useState(false);
 
   return (
     <div className="App">
