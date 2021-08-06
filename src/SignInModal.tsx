@@ -55,12 +55,13 @@ export function SignInModal(props: SignInModalProps) {
 
       log.studentList = log.studentList.map(student => {
         if (payload?.action === Action.SIGN_IN && student.id === payload?.id) {
-          student.signInTime = getCurrentTime();
+          student.signInTime = new Date();
           student.signInParent = parents?.[checks?.indexOf(true) as number];
         }
 
         if (payload?.action === Action.SIGN_OUT && student.id === payload?.id) {
-          student.signOutTime = getCurrentTime();
+          student.signOutTime = new Date();
+          student.totalTime = (student.signInTime as any - student.signOutTime as Date) as Date;;
           student.signOutParent = parents?.[checks?.indexOf(true) as number];
         }
 
