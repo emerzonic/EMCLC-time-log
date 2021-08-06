@@ -6,7 +6,7 @@ export function DigitalClock() {
 
   const startTime = () => {
     setClock(getCurrentTime());
-    setTimeout(startTime, 10000);
+    setTimeout(startTime, 15000);
   };
 
   useEffect(() => {
@@ -16,6 +16,6 @@ export function DigitalClock() {
 
 
   return (
-    <div className="display-3">{clock}</div>
+    <div className="display-2">{clock}</div>
   );
 }

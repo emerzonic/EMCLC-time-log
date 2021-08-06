@@ -4,7 +4,7 @@ import { TimeLogRow } from "./TimeLogRow";
 
 export interface TimeSheetTableProps {
   timeLog: TimeLog;
-  setSignal: (open: number) => void;
+  setSignal: (e: any) => void;
 }
 
 export function TimeSheetTable(props: TimeSheetTableProps) {

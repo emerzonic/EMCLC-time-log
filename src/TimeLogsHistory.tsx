@@ -10,17 +10,17 @@ export function TimeLogsHistory(props: any) {
   });
   const previousLogs = timeLogs.filter(log => log.date !== getTodayDate());
   return (
-    <div>
+    <div className="text-left">
       <p>
         <button className="btn btn-primary text-left" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-          Time Log History
+          Time Sheet History
         </button>
       </p>
       <div className="collapse" id="collapseExample">
         <div className="card card-body">
-          {previousLogs.length ? previousLogs.map(log => (
+          {previousLogs.length ? [...previousLogs, ...previousLogs, ...previousLogs].map(log => (
             <div>
-              <h4>{log.date}</h4>
+              <h4 className="p-3 border rounded">{log.date}</h4>
               <table className="table table-light">
                 <thead>
                   <tr>
@@ -33,14 +33,15 @@ export function TimeLogsHistory(props: any) {
                   </tr>
                 </thead>
                 <tbody>
-                  {log.studentList.map((s, i) => <tr>
+                  {log.studentList.map((s, i) => (
+                  <tr key={i} className="text-left">
                     <th scope="row">{i + 1}</th>
                     <td>{s.firstName} {s.lastName}</td>
                     <td>{s.signInTime}</td>
                     <td>{s.signInParent}</td>
                     <td>{s.signOutTime}</td>
                     <td>{s.signOutParent}</td>
-                  </tr>)}
+                  </tr>))}
                 </tbody>
               </table>
             </div>

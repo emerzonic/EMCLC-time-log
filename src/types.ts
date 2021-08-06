@@ -8,15 +8,11 @@ export interface Child {
   id: number;
   firstName: string;
   lastName: string;
-  signInTime?: string | null;
-  signOutTime?: string | null;
+  signInTime: Date | null;
+  signOutTime: Date | null;
   signInParent?: string | null;
   signOutParent?: string | null;
-}
-
-
-export interface CurrentTimeLogsProps {
-
+  totalTime: Date | null;
 }
 
 export enum Action {

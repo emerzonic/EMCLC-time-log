@@ -7,7 +7,8 @@ import { ManageStudents } from './ManageStudents';
 import { NavBar } from './NavBar';
 
 function App() {
-  const [manageStudents] = useState(false);
+  const [manageStudents, setManagementStugents] = useState(false);
+  const [singnal, setSignal] = useState(null);
 
   return (
     <div className="App">
@@ -15,16 +16,16 @@ function App() {
       <header className="App-header">
         <div className="btn-group" role="group" aria-label="Basic example">
           <button type="button" className="btn btn-primary btn-lg mx-2" data-toggle="modal" data-target="#addStudentModal">Add Student</button>
-          <button type="button" className="btn btn-secondary btn-lg mx-2" data-toggle="modal" data-target="#addNewTimeLogModal">Create New Time Log</button>
-          <button type="button" className="btn btn-secondary btn-lg mx-2">Manage Students</button>
+          <button type="button" className="btn btn-primary btn-lg mx-2" data-toggle="modal" data-target="#addNewTimeLogModal">Create New Time Sheet</button>
+          <button onClick={()=> setManagementStugents(!manageStudents)} type="button" className="btn btn-primary btn-lg mx-2">{manageStudents ? 'Back To Time Sheet': 'Manage Students'}</button>
         </div>
       </header>
-      <div className="container-fluid border mt-3 px-4">
-        {!manageStudents && <CurrentTimeLogs />}
+      <div className="container border mt-3 px-4">
+        {!manageStudents && <CurrentTimeLogs signal={singnal}/>}
         {manageStudents && <ManageStudents />}
       </div>
       <AddStudentModal />
-      <AddTimeLogModal />
+      <AddTimeLogModal setSignal={setSignal}/>
     </div>
   );
 }

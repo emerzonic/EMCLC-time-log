@@ -9,7 +9,12 @@ export function getCurrentTime() {
   return generate(options);
 };
 
-function generate(options: Intl.DateTimeFormatOptions) {
-  return new Intl.DateTimeFormat('en-US', options).format(new Date());
+export function formatTime(date: Date) {
+  const options =  { timeStyle: 'short' } as Intl.DateTimeFormatOptions;
+  return generate(options, date);
+};
+
+function generate(options: Intl.DateTimeFormatOptions, date?: Date) {
+  return new Intl.DateTimeFormat('en-US', options).format(date ?? new Date());
 }
 

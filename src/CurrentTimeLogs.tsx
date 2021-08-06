@@ -1,26 +1,36 @@
-import React, { useState } from 'react';
-import { CurrentTimeLogsProps, StorageKeys, TimeLog } from './types';
+import React, { useEffect, useState } from 'react';
+import { StorageKeys, TimeLog } from './types';
 import { getTodayDate } from "./dateUtil";
 import { DigitalClock } from "./DigitalClock";
 import { SignInModal } from "./SignInModal";
 import { TimeLogsHistory } from './TimeLogsHistory';
 import { TimeSheetTable } from './TimeSheetTable';
+import { getItem } from './appStorageManager';
 
+export interface CurrentTimeLogsProps {
+ signal:any
+}
 export function CurrentTimeLogs(props: CurrentTimeLogsProps) {
-  const [timeLog, setTimeLog] = useState<TimeLog>(() => {
-    const timeLogs = localStorage.getItem(StorageKeys.TIME_LOGS);
-    const parsedTimeLogs = timeLogs ? JSON.parse(timeLogs) : [];
-    const todayTimeLog = parsedTimeLogs.find((log: TimeLog) => log.date === getTodayDate());
+  const update =() =>{
+    const timeLogs = getItem<TimeLog[]>(StorageKeys.TIME_LOGS) ?? [];
+    const todayTimeLog = timeLogs.find((log: TimeLog) => log.date === getTodayDate());
     return todayTimeLog;
-  });
+  }
 
-  const [signal, setSignal] = useState<number>(0);
+  const [timeLog, setTimeLog] = useState<TimeLog | undefined>(update());
+  const [signal, setSignal] = useState(null);
+
+ 
+
+  useEffect(() => {
+    setTimeLog(update())
+  }, [props.signal])
 
   return (
     <>
-      <h1>{timeLog?.date || getTodayDate()}</h1>
+      <h1 className="pt-4">{timeLog?.date || getTodayDate()}</h1>
       <DigitalClock />
-      <TimeSheetTable timeLog={timeLog} setSignal={setSignal} />
+      <TimeSheetTable timeLog={timeLog as TimeLog} setSignal={setSignal} />
       <TimeLogsHistory />
       <SignInModal setTimeLog={setTimeLog} signal={signal} />
     </>

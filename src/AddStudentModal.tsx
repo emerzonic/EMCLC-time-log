@@ -9,7 +9,7 @@ export function AddStudentModal(props: any) {
   const [parentThree, setParentThree] = useState<string>('');
   const [count, setParentCount] = useState<number>(1);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
-
+  const [error, setError] = useState<boolean>(false);
 
   const onNameChange = (keyValuePar: any) => {
     setStudent({ ...student, ...keyValuePar });
@@ -28,10 +28,19 @@ export function AddStudentModal(props: any) {
     setParentThree('');
     setParentCount(1);
     setShowConfirmation(false);
+    setError(false);
   };
 
   const handleSubmit = () => {
+    if (!student.firstName || !student.lastName || !parentOne) {
+      setError(true);
+      return;
+    };
     setShowConfirmation(true);
+  };
+
+  const handleEdit = () => {
+    setShowConfirmation(false);
   };
 
   const handleConfirm = () => {
@@ -47,25 +56,32 @@ export function AddStudentModal(props: any) {
   const confirmation = (
     <div className="card w-100 text-left">
       <div className="card-body">
-        <h5 className="card-title font-weight-bold">Review Information</h5>
+        <h6 className="card-title border-bottom">Student</h6>
         <p className="card-text">First Name: {student.firstName}</p>
         <p className="card-text">Last Name: {student.lastName}</p>
         <div className="hr" />
-        <h5 className="card-text font-weight-bold">Parents/Guardians</h5>
+        <h6 className="card-text border-bottom">Parents/Guardians</h6>
         <div className="hr" />
-        {parentOne && <p className="card-text">{parentOne}</p>}
-        {parentTwo && <p className="card-text">{parentTwo}</p>}
-        {parentThree && <p className="card-text">{parentThree}</p>}
+        {parentOne && <p className="card-text">1. {parentOne}</p>}
+        {parentTwo && <p className="card-text">2. {parentTwo}</p>}
+        {parentThree && <p className="card-text">3. {parentThree}</p>}
       </div>
     </div>
-  )
+  );
+
+  const inValid = (
+    <div className="text-danger fade-in">Required.</div>
+  );
+
+  const add = 'Add Student';
+  const confirm = 'Review Student Detail';
 
   return (
     <div className="modal fade" id="addStudentModal" role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true">
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title" id="addStudentModalLabel">Enter Student Information</h5>
+            <h5 className="modal-title" id="addStudentModalLabel">{showConfirmation ? confirm: add}</h5>
             <button onClick={resetForm} type="button" className="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -74,29 +90,32 @@ export function AddStudentModal(props: any) {
             <form>
               <div className="form-group">
                 <label>First Name</label>
-                <input type="text" onChange={(e) => onNameChange({ firstName: e.target.value })} value={student.firstName} className="form-control" aria-describedby="emailHelp" placeholder="Enter email" />
+                <input type="text" onChange={(e) => onNameChange({ firstName: e.target.value.trim() })} value={student.firstName} className="form-control" aria-describedby="emailHelp" placeholder="Enter email" />
+                {error && !student.firstName ? inValid: ''}
               </div>
               <div className="form-group">
                 <label>Last Name</label>
-                <input type="text" onChange={(e) => onNameChange({ lastName: e.target.value })} value={student.lastName} className="form-control" placeholder="Enter Last Name" />
+                <input type="text" onChange={(e) => onNameChange({ lastName: e.target.value.trim() })} value={student.lastName} className="form-control" placeholder="Enter Last Name" />
+                {error && !student.lastName ? inValid: ''}
               </div>
               <div className="form-group">
                 <label>Parent/Guardian 1</label>
-                <input type="text" onChange={(e) => setParentOne(e.target.value)} value={parentOne} className="form-control" placeholder="Enter Parent/Guadian" />
+                <input type="text" onChange={(e) => setParentOne(e.target.value.trim())} value={parentOne} className="form-control" placeholder="Enter Parent/Guadian" />
+                {error && !parentOne ? inValid: ''}
               </div>
               <div className={count > 1 ? 'form-group' : "form-group d-none"}>
                 <label>Parent/Guardian 2</label>
-                <input type="text" onChange={(e) => setParentTwo(e.target.value)} value={parentTwo} className="form-control" placeholder="Enter Parent/Guadian 2" />
+                <input type="text" onChange={(e) => setParentTwo(e.target.value.trim())} value={parentTwo} className="form-control" placeholder="Enter Parent/Guadian 2" />
               </div>
               <div className={count > 2 ? 'form-group' : "form-group d-none"}>
                 <label>Parent/Guardian 3</label>
-                <input type="text" onChange={(e) => setParentThree(e.target.value)} value={parentThree} className="form-control" placeholder="Enter Parent/Guadian 3" />
+                <input type="text" onChange={(e) => setParentThree(e.target.value.trim())} value={parentThree} className="form-control" placeholder="Enter Parent/Guadian 3" />
               </div>
             </form>
             <button onClick={updateForm} type="button" className={count === 3 ? "btn btn-primary btn-sm d-none" : "btn btn-primary btn-sm"}>Add Another Parent/Guardian</button>
           </div>}
           <div className="modal-footer">
-            <button onClick={resetForm} type="button" className="btn btn-secondary" data-dismiss="modal">Edit</button>
+           {showConfirmation && <button onClick={handleEdit} type="button" className="btn btn-secondary">Edit</button>}
             <button onClick={resetForm} type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button onClick={showConfirmation ? handleConfirm : handleSubmit} type="button" className="btn btn-primary">Submit</button>
           </div>
