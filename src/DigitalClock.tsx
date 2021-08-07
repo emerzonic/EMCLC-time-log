@@ -16,6 +16,6 @@ export function DigitalClock() {
 
 
   return (
-    <div className="display-2">{clock}</div>
+    <div className="display-4">{clock}</div>
   );
 }

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { StorageKeys, Student } from './types';
+import { useState } from 'react';
+import { getItem, setItem } from './appStorageManager';
+import { StorageKeys, Student, View } from './types';
 
 export function AddStudentModal(props: any) {
+  //seed();
   const defaultStudent = { id: null, firstName: '', lastName: '', parentOrGuardians: [] };
   const [student, setStudent] = useState<Student>(defaultStudent);
   const [parentOne, setParentOne] = useState<string>('');
@@ -31,8 +33,8 @@ export function AddStudentModal(props: any) {
     setError(false);
   };
 
-  const handleSubmit = () => {
-    if (!student.firstName || !student.lastName || !parentOne) {
+  const confirmInfo = () => {
+    if (!student.firstName.trim() || !student.lastName.trim() || !parentOne.trim()) {
       setError(true);
       return;
     };
@@ -43,14 +45,14 @@ export function AddStudentModal(props: any) {
     setShowConfirmation(false);
   };
 
-  const handleConfirm = () => {
-    const list = localStorage.getItem(StorageKeys.STUDENT_LIST);
-    const retrievedList = list ? JSON.parse(list) : [];
+  const submitInfo = () => {
+    const list = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
     const parents = [parentOne, parentTwo, parentThree].filter(p => p);
-    const newStudent = { ...student, id: retrievedList.length + 1, parentOrGuardians: parents };
-    const updatedList = [...retrievedList, newStudent];
-    localStorage.setItem(StorageKeys.STUDENT_LIST, JSON.stringify(updatedList));
+    const newStudent = { ...student, id: list.length + 1, parentOrGuardians: parents };
+    const updatedList = [...list, newStudent];
+    setItem(StorageKeys.STUDENT_LIST, updatedList);
     resetForm();
+    props.setView(View.MANAGE_STUDENTS);
   };
 
   const confirmation = (
@@ -81,7 +83,7 @@ export function AddStudentModal(props: any) {
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title" id="addStudentModalLabel">{showConfirmation ? confirm: add}</h5>
+            <h5 className="modal-title" id="addStudentModalLabel">{showConfirmation ? confirm : add}</h5>
             <button onClick={resetForm} type="button" className="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -90,37 +92,91 @@ export function AddStudentModal(props: any) {
             <form>
               <div className="form-group">
                 <label>First Name</label>
-                <input type="text" onChange={(e) => onNameChange({ firstName: e.target.value.trim() })} value={student.firstName} className="form-control" aria-describedby="emailHelp" placeholder="Enter email" />
-                {error && !student.firstName ? inValid: ''}
+                <input type="text" onChange={(e) => onNameChange({ firstName: e.target.value })} value={student.firstName} className="form-control" aria-describedby="emailHelp" placeholder="Enter email" />
+                {error && !student.firstName ? inValid : ''}
               </div>
               <div className="form-group">
                 <label>Last Name</label>
-                <input type="text" onChange={(e) => onNameChange({ lastName: e.target.value.trim() })} value={student.lastName} className="form-control" placeholder="Enter Last Name" />
-                {error && !student.lastName ? inValid: ''}
+                <input type="text" onChange={(e) => onNameChange({ lastName: e.target.value })} value={student.lastName} className="form-control" placeholder="Enter Last Name" />
+                {error && !student.lastName ? inValid : ''}
               </div>
               <div className="form-group">
                 <label>Parent/Guardian 1</label>
-                <input type="text" onChange={(e) => setParentOne(e.target.value.trim())} value={parentOne} className="form-control" placeholder="Enter Parent/Guadian" />
-                {error && !parentOne ? inValid: ''}
+                <input type="text" onChange={(e) => setParentOne(e.target.value)} value={parentOne} className="form-control" placeholder="Enter Parent/Guadian" />
+                {error && !parentOne ? inValid : ''}
               </div>
               <div className={count > 1 ? 'form-group' : "form-group d-none"}>
                 <label>Parent/Guardian 2</label>
-                <input type="text" onChange={(e) => setParentTwo(e.target.value.trim())} value={parentTwo} className="form-control" placeholder="Enter Parent/Guadian 2" />
+                <input type="text" onChange={(e) => setParentTwo(e.target.value)} value={parentTwo} className="form-control" placeholder="Enter Parent/Guadian 2" />
               </div>
               <div className={count > 2 ? 'form-group' : "form-group d-none"}>
                 <label>Parent/Guardian 3</label>
-                <input type="text" onChange={(e) => setParentThree(e.target.value.trim())} value={parentThree} className="form-control" placeholder="Enter Parent/Guadian 3" />
+                <input type="text" onChange={(e) => setParentThree(e.target.value)} value={parentThree} className="form-control" placeholder="Enter Parent/Guadian 3" />
               </div>
             </form>
             <button onClick={updateForm} type="button" className={count === 3 ? "btn btn-primary btn-sm d-none" : "btn btn-primary btn-sm"}>Add Another Parent/Guardian</button>
           </div>}
           <div className="modal-footer">
-           {showConfirmation && <button onClick={handleEdit} type="button" className="btn btn-secondary">Edit</button>}
+            {showConfirmation && <button onClick={handleEdit} type="button" className="btn btn-outline-warning">Edit</button>}
             <button onClick={resetForm} type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button onClick={showConfirmation ? handleConfirm : handleSubmit} type="button" className="btn btn-primary">Submit</button>
+            <button onClick={showConfirmation ? submitInfo : confirmInfo} data-dismiss={showConfirmation ? "modal" : ""} type="button" className="btn btn-primary">Submit</button>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+
+// function seed() {
+//   const names = [
+//     'Nerissa Sward',
+//     'Chelsea Galaviz',
+//     'Rema Prochaska',
+//     'Dustin Spurrier',
+//     'Rosalva Merideth',
+//     'Daniella Pleiman',
+//     'Marlys Melvin',
+//     'Sherice Orner',
+//     'Odelia Madere',
+//     'Keisha Mckinsey',
+//     'Gary Vereen',
+//     'Terrilyn Joynes',
+//     'Ashleigh Veit',
+//     'Solomon Flanders',
+//     'Dedra Beech',
+//     'Ken Demont',
+//     'Loan Felder',
+//     'Elba Isherwood',
+//     'Fidelia Felan',
+//     'Malik Kirshner',
+//     'Nerissa Sward',
+//     'Chelsea Galaviz',
+//     'Rema Prochaska',
+//     'Dustin Spurrier',
+//     'Rosalva Merideth',
+//     'Daniella Pleiman',
+//     'Marlys Melvin',
+//     'Sherice Orner',
+//     'Odelia Madere',
+//     'Keisha Mckinsey',
+//     'Gary Vereen',
+//     'Terrilyn Joynes',
+//     'Ashleigh Veit',
+//     'Solomon Flanders',
+//     'Dedra Beech',
+//     'Ken Demont',
+//     'Loan Felder',
+//     'Elba Isherwood',
+//     'Fidelia Felan',
+//     'Malik Kirshner'];
+//   var s: Student[] = [];
+//   names.forEach((name, i) => {
+//     var [f, l] = name.split(" ");
+//     s.push({ id: i + 1, firstName: f, lastName: l, parentOrGuardians: names.filter(n => n.startsWith(f[0])) });
+
+//   });
+
+//   setItem(StorageKeys.STUDENT_LIST, s);
+
+//}

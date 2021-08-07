@@ -54,24 +54,31 @@ export function SignInModal(props: SignInModalProps) {
       }
 
       log.studentList = log.studentList.map(student => {
+        const date = new Date();
         if (payload?.action === Action.SIGN_IN && student.id === payload?.id) {
-          student.signInTime = new Date();
+          student.signInTime = getCurrentTime();
+          student.signInHour = date.getHours();
           student.signInParent = parents?.[checks?.indexOf(true) as number];
         }
 
         if (payload?.action === Action.SIGN_OUT && student.id === payload?.id) {
-          student.signOutTime = new Date();
-          student.totalTime = (student.signInTime as any - student.signOutTime as Date) as Date;;
+          student.signOutTime = getCurrentTime();
+          student.signOutHour = date.getHours();
+          student.totalDayHours = student.signOutHour - student.signInHour;
           student.signOutParent = parents?.[checks?.indexOf(true) as number];
         }
 
-        if (payload?.action === Action.RESET && student.id === payload?.id) {
+        if (payload?.action === Action.CANCEL && student.id === payload?.id) {
           if (student.signOutTime && student.signInTime) {
             student.signOutTime = null;
             student.signOutParent = null;
+            student.totalDayHours = 0;
+            student.signOutHour = 0;
           } else if (student.signInTime && !student.signOutTime) {
             student.signInTime = null;
             student.signInParent = null;
+            student.totalDayHours = 0;
+            student.signInHour = 0;
           }
         }
         return student;
@@ -87,11 +94,11 @@ export function SignInModal(props: SignInModalProps) {
     setSettings({ ...settings, disabled: true } as Settings);
   };
 
-  const message = payload?.action === Action.RESET ? 'Please Confirm!' : `Select your name from below and confirm ${payload?.action}.`;
+  const message = payload?.action === Action.CANCEL ? 'Please Confirm!' : `Select your name from below and confirm ${payload?.action}.`;
 
   const alert = (
     <div className="font-weight-bold text-success modal-title fade-in">
-      {`${payload?.action} has been succcessfully completed!`}
+      {`${payload?.action} action has been succcessfully completed!`}
     </div>
   );
 
@@ -112,7 +119,7 @@ export function SignInModal(props: SignInModalProps) {
             </button>
           </div>
           <div className="modal-body text-left">
-            {payload?.action !== Action.RESET && parents?.map((parent, i) => (
+            {payload?.action !== Action.CANCEL && parents?.map((parent, i) => (
               <div key={i} className="form-check">
                 <input onChange={() => handleOnChange(i)} className="form-check-input" type="radio" name="exampleRadios" id={`${i}`} value={parent} checked={checks?.[i]} />
                 <label className="form-check-label" htmlFor={`${i}`}>{parent}</label>

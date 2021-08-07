@@ -8,10 +8,10 @@ import { TimeSheetTable } from './TimeSheetTable';
 import { getItem } from './appStorageManager';
 
 export interface CurrentTimeLogsProps {
- signal:any
+  signal: any
 }
 export function CurrentTimeLogs(props: CurrentTimeLogsProps) {
-  const update =() =>{
+  const update = () => {
     const timeLogs = getItem<TimeLog[]>(StorageKeys.TIME_LOGS) ?? [];
     const todayTimeLog = timeLogs.find((log: TimeLog) => log.date === getTodayDate());
     return todayTimeLog;
@@ -20,20 +20,20 @@ export function CurrentTimeLogs(props: CurrentTimeLogsProps) {
   const [timeLog, setTimeLog] = useState<TimeLog | undefined>(update());
   const [signal, setSignal] = useState(null);
 
- 
+
 
   useEffect(() => {
     setTimeLog(update())
   }, [props.signal])
 
   return (
-    <>
+    <div className="fade-in">
       <h1 className="pt-4">{timeLog?.date || getTodayDate()}</h1>
       <DigitalClock />
       <TimeSheetTable timeLog={timeLog as TimeLog} setSignal={setSignal} />
       <TimeLogsHistory />
       <SignInModal setTimeLog={setTimeLog} signal={signal} />
-    </>
+    </div>
   );
 }
 

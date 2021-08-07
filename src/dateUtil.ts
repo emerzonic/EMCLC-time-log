@@ -5,12 +5,16 @@ export function getTodayDate() {
 };
 
 export function getCurrentTime() {
-  const options =  { timeStyle: 'short' } as Intl.DateTimeFormatOptions;
+  const options = { timeStyle: 'short' } as Intl.DateTimeFormatOptions;
   return generate(options);
 };
 
-export function formatTime(date: Date) {
-  const options =  { timeStyle: 'short' } as Intl.DateTimeFormatOptions;
+export function formatTime(date: Date | null) {
+  if (!date) {
+    return '';
+  }
+
+  const options = { timeStyle: 'short' } as Intl.DateTimeFormatOptions;
   return generate(options, date);
 };
 

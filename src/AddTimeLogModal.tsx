@@ -1,60 +1,71 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getItem, setItem } from './appStorageManager';
 import { getTodayDate } from './dateUtil';
-import { StorageKeys, Student } from './types';
+import { StorageKeys, Student, TimeLog, View } from './types';
 
-interface Error{
-  hasError: boolean;
+interface Warning {
+  hasWarning: boolean;
   message: string;
 }
-interface TimeSheetModalProps{
-  setSignal: (e:any)=> void;
+interface TimeSheetModalProps {
+  setSignal: (e: any) => void;
+  singnal: any;
+  setView: (view: View) => void;
 }
 export function AddTimeLogModal(props: TimeSheetModalProps) {
   const [date] = useState<string>(() => getTodayDate());
-  const defaulError = { hasError: false, message: '' };
-  const [error, setError] = useState<Error>(defaulError);
-  const [info, setInfo] = useState<string>('Clicking Create button will create new time sheet for today');
+  const defaulWarning = { hasWarning: false, message: '' };
+  const [warning, setWarning] = useState<Warning>(defaulWarning);
+  const defaultInfo = 'Clicking Create button will create new time sheet for today';
+  const [info, setInfo] = useState<string>(defaultInfo);
+  const [timeSheets, setTimeSheets] = useState<TimeLog[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
 
   const handleSave = () => {
-    const timeLogs = localStorage.getItem(StorageKeys.TIME_LOGS);
-    const parsedTimeLogs = timeLogs ? JSON.parse(timeLogs) : [];
-
-    if (parsedTimeLogs.find((log: any) => log.date === date)) {
-      setError({hasError: true, message: 'Time sheet already exist for today!.'});
-      return;
-    }
-
-    const studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ??  [];
-
-    if (!studentList.length) {
-      setError({hasError: true, message: 'At least one child is requred to create new time sheet.'});
-      return;
-    }
-
-    const newTimelog = { id: parsedTimeLogs.length + 1, date, studentList: studentList };
-    const updatedTimeLogs = [...parsedTimeLogs, newTimelog];
+    const newTimelog = { id: timeSheets.length + 1, date, studentList: students };
+    const updatedTimeLogs = [...timeSheets, newTimelog];
     setItem(StorageKeys.TIME_LOGS, updatedTimeLogs);
     setInfo('A new time sheet has been created for today.');
+    props.setView(View.TIME_SHEET);
     props.setSignal(Date.now())
   };
 
   const clearError = () => {
-    setError(defaulError);
+    setWarning(defaulWarning);
   };
 
-  const alert = (
-    <div className="font-weight-bold text-danger modal-title fade-in">
-      {error.message}
+  const errorAlert = (
+    <div className="font-weight-bold text-info modal-title fade-in">
+      {warning.message}
     </div>
   );
 
 
-  const initialInfo = (
+  const successAlert = (
     <div className="font-weight-bold modal-title">
       {info}
     </div>
   );
+
+  useEffect(() => {
+    const timeLogs = getItem<TimeLog[]>(StorageKeys.TIME_LOGS) ?? [];
+
+    if (timeLogs.find((log: any) => log.date === date)) {
+      setWarning({ hasWarning: true, message: 'Time sheet already exist for today!.' });
+      return;
+    }
+
+    const studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
+
+    if (!studentList.length) {
+      setWarning({ hasWarning: true, message: 'At least one child is requred to create new time sheet.' });
+      return;
+    }
+
+    setTimeSheets(timeLogs);
+    setStudents(studentList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.singnal])
 
   return (
     <div className="modal fade" id="addNewTimeLogModal" role="dialog" aria-labelledby="addNewTimeLogLabel" aria-hidden="true">
@@ -66,12 +77,12 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
             </button>
           </div>
           <div className="modal-body text-center h6">
-            {error.hasError ? alert : initialInfo}
+            {warning.hasWarning ? errorAlert : successAlert}
             <h3 className="mt-3">{date}</h3>
           </div>
           <div className="modal-footer">
-            <button onClick={clearError} type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button onClick={handleSave} type="button" className={error.hasError ? "btn btn-primary disabled" : "btn btn-primary"}>Create</button>
+            <button onClick={clearError} type="button" className="btn btn-secondary" data-dismiss="modal">{warning.hasWarning ? 'Close' : 'Cancel'}</button>
+            <button onClick={handleSave} type="button" data-dismiss="modal" className={warning.hasWarning || info !== defaultInfo ? "btn btn-primary disabled" : "btn btn-primary"}>Create</button>
           </div>
         </div>
       </div>

@@ -1,28 +1,29 @@
-import React from 'react';
 import { Child, UpdateActionPayload, Action } from './types';
 
 interface TimeLogRowProps {
   row: Child;
+  number: number,
   setPayload: (e: any, action: UpdateActionPayload) => void;
 }
 
-export function TimeLogRow({ row, setPayload: setAction }: TimeLogRowProps) {
-  const signInText = row.signInTime ? row.signInTime : Action.SIGN_IN;
-  const signOutText = row.signOutTime ? row.signOutTime : Action.SIGN_OUT;
-
-  const signInButtonClass = (signInText === Action.SIGN_IN) ? "btn btn-primary btn-sm" : "btn btn-success btn-sm disabled";
-  const signOutButtonClass = (signInText === Action.SIGN_IN && signOutText === Action.SIGN_OUT) ? "btn btn-primary btn-sm disabled" : "btn btn-primary btn-sm";
-  const resetButtonClass = (signInText === Action.SIGN_IN && signOutText === Action.SIGN_OUT) ? "btn btn-warning btn-sm disabled" : "btn btn-warning btn-sm";
+export function TimeLogRow({ row, number, setPayload: setAction }: TimeLogRowProps) {
+  const signInButtonClass = row.signInTime ? "btn btn-success btn-sm disabled" : "btn btn-primary btn-sm";
+  let signOutButtonClass = row.signInTime ? "btn btn-primary btn-sm mx-2" : "btn btn-primary btn-sm disabled mx-2";
+  const resetButtonClass = row.signInTime ? "btn btn-warning btn-sm" : "btn btn-warning btn-sm disabled";
 
   return (
     <tr>
-      <td className="text-left">{row.firstName}</td>
-      <td className="text-left">{row.lastName}</td>
-      <td><button onClick={(e: any) => setAction(e, { id: row.id, action: Action.SIGN_IN })} data-toggle="modal" data-target={signInText === Action.SIGN_IN && "#SignInModal"} type="button" className={signInButtonClass}>{signInText}</button></td>
-      <td className="text-left">{row.signInParent}</td>
-      <td><button onClick={(e: any) => setAction(e, { id: row.id, action: Action.SIGN_OUT })} data-toggle="modal" data-target={signInText !== Action.SIGN_IN && "#SignInModal"} type="button" className={signOutButtonClass}>{signOutText}</button></td>
-      <td className="text-left">{row.signOutParent}</td>
-      <td><button onClick={(e: any) => setAction(e, { id: row.id, action: Action.RESET })} data-toggle="modal" data-target={signInText !== Action.SIGN_IN && "#SignInModal"} type="button" className={`${resetButtonClass}`}>Reset</button></td>
+      <td>{number}.</td>
+      <td>{row.firstName}</td>
+      <td>{row.lastName}</td>
+      <td>{row.signInTime}</td>
+      <td>{row.signInParent}</td>
+      <td>{row.signOutTime}</td>
+      <td>{row.signOutParent}</td>
+      <td className="text-center">
+        <button onClick={(e: any) => setAction(e, { id: row.id, action: Action.SIGN_IN })} data-toggle="modal" data-target={!row.signInTime && "#SignInModal"} type="button" className={signInButtonClass}>{Action.SIGN_IN}</button>
+        <button onClick={(e: any) => setAction(e, { id: row.id, action: Action.SIGN_OUT })} data-toggle="modal" data-target={row.signInTime && "#SignInModal"} type="button" className={signOutButtonClass}>{Action.SIGN_OUT}</button>
+        <button onClick={(e: any) => setAction(e, { id: row.id, action: Action.CANCEL })} data-toggle="modal" data-target={row.signInTime && "#SignInModal"} type="button" className={resetButtonClass}>{Action.CANCEL}</button></td>
     </tr>
   );
 }
