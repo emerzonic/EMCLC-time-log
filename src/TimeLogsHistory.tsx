@@ -1,31 +1,46 @@
 import React, { useState } from 'react';
-import { StorageKeys, TimeLog } from './types';
-import { getTodayDate } from "./dateUtil";
+import { Child, StorageKeys, TimeLog } from './types';
 import { getItem } from './appStorageManager';
+import { CsvDownload } from './CsvDownload';
 
 export function TimeLogsHistory(props: any) {
   const [timeLogs,] = useState<TimeLog[]>(() => {
     const timeLogs = getItem<TimeLog[]>(StorageKeys.TIME_LOGS) ?? [];;
     return timeLogs;
   });
-  const previousLogs = timeLogs.filter(log => log.date === getTodayDate());
+
+  const generateDownloadData =(timeSheets: Child[])=> {
+    return timeSheets.map((s, i ) => ({
+        '#': i + 1,
+        'Name': `${s.firstName} ${s.lastName}`, 
+        'Time In': s.signInTime ?? '-',
+        'Sign In By': s.signInParent ?? '-',
+        'Time Out': s.signOutTime ?? '-',
+        'Sign Out By': s.signOutParent ?? '-',
+        'Total Hours': (s.signOutHour ?? 0) - (s.signInHour ?? 0),
+      }));
+  };
+
   return (
-    <div className="text-left">
-      <p>
-        <button className="btn btn-primary text-left" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-          Time Sheet History
+    <>
+    <hr/>
+    <h1 className="text-left h3 border-bottom">Time Sheet Reports</h1>
+    {timeLogs.length ? timeLogs.map((log, index) => ( 
+    <div className="text-left" key={index}>
+      <p className="mb-2 mt-3">
+        <button className="btn  btn-sm btn-primary text-left mr-2 w-25" type="button" data-toggle="collapse" data-target={`#${log.id}`} aria-expanded="false" aria-controls={`#${log.id}`}>
+        <i className="fa fa-calendar-o" aria-hidden="true"></i> {log.date}
         </button>
+        <CsvDownload data={generateDownloadData(log.studentList)} title={`Time Sheet ${log.date}`}/>
       </p>
-      <div className="collapse" id="collapseExample">
-        <div className="card card-body">
-          {previousLogs.length ? [...previousLogs, ...previousLogs, ...previousLogs].map((log, index) => (
-            <div key={index}>
-              <h4 className="p-3 border rounded">{log.date}</h4>
+      <div className="collapse" id={`${log.id}`}>
+        <div className="card card-body pt-0">
+            <div>
               <table className="table table-light table-sm">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Child</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Sign In</th>
                     <th scope="col">Sign In By</th>
                     <th scope="col">Sign Out</th>
@@ -47,9 +62,9 @@ export function TimeLogsHistory(props: any) {
                 </tbody>
               </table>
             </div>
-          )) : 'No past time sheets are available for this week.'}
         </div>
       </div>
-    </div>
+    </div>)): 'Not time sheet report is available.'}
+    </>
   );
 }

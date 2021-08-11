@@ -114,11 +114,11 @@ export function AddStudentModal(props: any) {
                 <input type="text" onChange={(e) => setParentThree(e.target.value)} value={parentThree} className="form-control" placeholder="Enter Parent/Guadian 3" />
               </div>
             </form>
-            <button onClick={updateForm} type="button" className={count === 3 ? "btn btn-primary btn-sm d-none" : "btn btn-primary btn-sm"}>Add Another Parent/Guardian</button>
+            <button onClick={updateForm} type="button" className={count === 3 ? "btn btn-primary btn-sm d-none" : "btn btn-primary btn-sm"}>{<i className="fa fa-plus" aria-hidden="true"></i>} Add Another Parent/Guardian</button>
           </div>}
           <div className="modal-footer">
             {showConfirmation && <button onClick={handleEdit} type="button" className="btn btn-outline-warning">Edit</button>}
-            <button onClick={resetForm} type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button onClick={resetForm} type="button" className="btn btn-secondary" data-dismiss="modal">{<i className="fa fa-times" aria-hidden="true"></i>} Cancel</button>
             <button onClick={showConfirmation ? submitInfo : confirmInfo} data-dismiss={showConfirmation ? "modal" : ""} type="button" className="btn btn-primary">Submit</button>
           </div>
         </div>
@@ -128,55 +128,37 @@ export function AddStudentModal(props: any) {
 }
 
 
-// function seed() {
-//   const names = [
-//     'Nerissa Sward',
-//     'Chelsea Galaviz',
-//     'Rema Prochaska',
-//     'Dustin Spurrier',
-//     'Rosalva Merideth',
-//     'Daniella Pleiman',
-//     'Marlys Melvin',
-//     'Sherice Orner',
-//     'Odelia Madere',
-//     'Keisha Mckinsey',
-//     'Gary Vereen',
-//     'Terrilyn Joynes',
-//     'Ashleigh Veit',
-//     'Solomon Flanders',
-//     'Dedra Beech',
-//     'Ken Demont',
-//     'Loan Felder',
-//     'Elba Isherwood',
-//     'Fidelia Felan',
-//     'Malik Kirshner',
-//     'Nerissa Sward',
-//     'Chelsea Galaviz',
-//     'Rema Prochaska',
-//     'Dustin Spurrier',
-//     'Rosalva Merideth',
-//     'Daniella Pleiman',
-//     'Marlys Melvin',
-//     'Sherice Orner',
-//     'Odelia Madere',
-//     'Keisha Mckinsey',
-//     'Gary Vereen',
-//     'Terrilyn Joynes',
-//     'Ashleigh Veit',
-//     'Solomon Flanders',
-//     'Dedra Beech',
-//     'Ken Demont',
-//     'Loan Felder',
-//     'Elba Isherwood',
-//     'Fidelia Felan',
-//     'Malik Kirshner'];
-//   var s: Student[] = [];
-//   names.forEach((name, i) => {
-//     var [f, l] = name.split(" ");
-//     s.push({ id: i + 1, firstName: f, lastName: l, parentOrGuardians: names.filter(n => n.startsWith(f[0])) });
+function seed() {
+  const names = [
+    'Nerissa Sward',
+    'Chelsea Galaviz',
+    'Rema Prochaska',
+    'Dustin Spurrier',
+    'Rosalva Merideth',
+    'Daniella Pleiman',
+    'Marlys Melvin',
+    'Sherice Orner',
+    'Odelia Madere',
+    'Keisha Mckinsey',
+    'Gary Vereen',
+    'Terrilyn Joynes',
+    'Solomon Flanders',
+    'Dedra Beech',
+    'Ken Demont',
+    'Loan Felder',
+    'Elba Isherwood',
+    'Fidelia Felan',
+    'Malik Kirshner',
+    'Ashleigh Veit',
+    ];
+  var s: Student[] = [];
+  names.forEach((name, i) => {
+    var [f, l] = name.split(" ");
+    s.push({ id: i + 1, firstName: f, lastName: l, parentOrGuardians: names.filter(n => n.startsWith(f[0])) });
 
-//   });
+  });
 
-//   setItem(StorageKeys.STUDENT_LIST, s);
-
-//}
+  if (!getItem(StorageKeys.STUDENT_LIST)) {
+    setItem(StorageKeys.STUDENT_LIST, s);
+  }
+}

@@ -81,7 +81,7 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
             <h3 className="mt-3">{date}</h3>
           </div>
           <div className="modal-footer">
-            <button onClick={clearError} type="button" className="btn btn-secondary" data-dismiss="modal">{warning.hasWarning ? 'Close' : 'Cancel'}</button>
+            <button onClick={clearError} type="button" className="btn btn-secondary" data-dismiss="modal">{<i className="fa fa-times" aria-hidden="true"></i>} {warning.hasWarning ? 'Close' : 'Cancel'}</button>
             <button onClick={handleSave} type="button" data-dismiss="modal" className={warning.hasWarning || info !== defaultInfo ? "btn btn-primary disabled" : "btn btn-primary"}>Create</button>
           </div>
         </div>

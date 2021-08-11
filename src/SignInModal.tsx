@@ -57,13 +57,13 @@ export function SignInModal(props: SignInModalProps) {
         const date = new Date();
         if (payload?.action === Action.SIGN_IN && student.id === payload?.id) {
           student.signInTime = getCurrentTime();
-          student.signInHour = date.getHours();
+          student.signInHour = Date.now();
           student.signInParent = parents?.[checks?.indexOf(true) as number];
         }
 
         if (payload?.action === Action.SIGN_OUT && student.id === payload?.id) {
           student.signOutTime = getCurrentTime();
-          student.signOutHour = date.getHours();
+          student.signOutHour = Date.now();
           student.totalDayHours = student.signOutHour - student.signInHour;
           student.signOutParent = parents?.[checks?.indexOf(true) as number];
         }
@@ -127,7 +127,7 @@ export function SignInModal(props: SignInModalProps) {
             ))}
           </div>
           <div className="modal-footer">
-            <button onClick={resetSettings} type="button" className="btn btn-secondary" data-dismiss="modal">{disabled ? 'Close' : 'Cancel'}</button>
+            <button onClick={resetSettings} type="button" className="btn btn-secondary" data-dismiss="modal">{<i className="fa fa-times" aria-hidden="true"></i>} {disabled ? 'Close' : 'Cancel'}</button>
             <button onClick={handleSave} type="button" className="btn btn-primary" disabled={disabled}>{confirmButtonText}</button>
           </div>
         </div>
