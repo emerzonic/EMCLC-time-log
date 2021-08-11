@@ -1,17 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Child, StorageKeys, TimeLog, UpdateActionPayload } from './types';
 import { TimeLogRow } from "./TimeLogRow";
 import { setItem } from './appStorageManager';
+import { TypeOfTag } from 'typescript';
 
 export interface TimeSheetTableProps {
   timeLog: TimeLog;
   setSignal: (e: any) => void;
+  sort: (sortSetting: SortSetting) => void;
+}
+
+export enum Field {
+  FIRST_NAME = 'firstName',
+  LAST_NAME = 'lastName',
+  SIGN_IN = 'signInHour',
+  SIGN_OUT = 'signOutHour',
+}
+
+export enum ORDER {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
+export interface SortSetting {
+  field: Field,
+  order: ORDER,
+  type: TypeOfTag
 }
 
 export function TimeSheetTable(props: TimeSheetTableProps) {
+  const [sortSettings, setSortSettings] = useState<SortSetting[]>([
+    { field: Field.FIRST_NAME, order: ORDER.ASC, type: 'string' },
+    { field: Field.LAST_NAME, order: ORDER.ASC, type: 'string' },
+    { field: Field.SIGN_IN, order: ORDER.ASC, type: 'number' },
+    { field: Field.SIGN_OUT, order: ORDER.ASC, type: 'number' },
+  ]);
+
   const setPayload = (e: any, payload: UpdateActionPayload) => {
     setItem(StorageKeys.ACTION_PAYLOAD, payload);
     props.setSignal(e);
+  }
+
+  const sort = (sortByField: string) => {
+    const updatedSettings = sortSettings.map(setting => {
+      if (sortByField !== setting?.field) {
+        return setting;
+      }
+
+      if (setting.order === ORDER.ASC) {
+        setting.order = ORDER.DESC;
+        return setting;
+      }
+
+      setting.order = ORDER.ASC;
+      return setting;
+    });
+
+    setSortSettings(updatedSettings);
+    const setting = sortSettings.find(s => s.field === sortByField);
+    console.log(setting)
+    props.sort(setting as SortSetting);
   }
 
   return (
@@ -19,11 +67,11 @@ export function TimeSheetTable(props: TimeSheetTableProps) {
       <thead>
         <tr className="bg-dark text-light">
           <th scope="col">#</th>
-          <th scope="col">First Name</th>
-          <th scope="col">Last Name</th>
-          <th scope="col">Time In</th>
+          <th onClick={() => sort(Field.FIRST_NAME)} scope="col">First Name <i className="fa fa-fw fa-sort"></i></th>
+          <th onClick={() => sort(Field.LAST_NAME)} scope="col">Last Name <i className="fa fa-fw fa-sort"></i></th>
+          <th onClick={() => sort(Field.SIGN_IN)} scope="col">Time In <i className="fa fa-fw fa-sort"></i></th>
           <th scope="col">Sign In By</th>
-          <th scope="col">Time Out</th>
+          <th onClick={() => sort(Field.SIGN_OUT)} scope="col">Time Out <i className="fa fa-fw fa-sort"></i></th>
           <th scope="col">Sign Out By</th>
           <th className="text-center" scope="col">Action</th>
         </tr>
