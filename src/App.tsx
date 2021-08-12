@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AddStudentModal } from './AddStudentModal';
 import { AddTimeLogModal } from './AddTimeLogModal';
 import './App.css';
-import { CurrentTimeLogs } from './CurrentTimeLogs';
+import { CurrentTimeSheet } from './CurrentTimeSheet';
 import { ManageStudents } from './ManageStudents';
 import { NavBar } from './NavBar';
 import { View } from './types';
@@ -31,7 +31,7 @@ function App() {
         </div>
       </header>
       <div className="container border mt-3 px-4">
-        {isTimeSheetView && <CurrentTimeLogs signal={singnal} />}
+        {isTimeSheetView && <CurrentTimeSheet signal={singnal} />}
         {!isTimeSheetView && <ManageStudents />}
       </div>
       <AddStudentModal setView={setView} />

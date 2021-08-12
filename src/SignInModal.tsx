@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { UpdateActionPayload, TimeLog, Student, Action, StorageKeys } from './types';
+import { UpdateActionPayload, TimeSheet as TimeSheet, Student, Action, StorageKeys } from './types';
 import { getCurrentTime, getTodayDate } from "./dateUtil";
 import { getItem, removeItem, setItem } from './appStorageManager';
 
 interface SignInModalProps {
-  setTimeLog: (timeLog: TimeLog) => void;
+  setTimeLog: (timeLog: TimeSheet) => void;
   signal: any;
 }
 
@@ -47,50 +47,49 @@ export function SignInModal(props: SignInModalProps) {
   };
 
   const handleSave = (e: any) => {
-    const timeLogs = getItem<TimeLog[]>(StorageKeys.TIME_LOGS) ?? [];
-    const updatedTimeLogs: TimeLog[] = timeLogs.map((log: TimeLog) => {
-      if (log.date !== getTodayDate()) {
-        return log;
+    const timeLogs = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
+    const updatedTimeLogs: TimeSheet[] = timeLogs.map((timeSheet: TimeSheet) => {
+      if (timeSheet.date !== getTodayDate()) {
+        return timeSheet;
       }
 
-      log.studentList = log.studentList.map(student => {
-        const date = new Date();
-        if (payload?.action === Action.SIGN_IN && student.id === payload?.id) {
-          student.signInTime = getCurrentTime();
-          student.signInHour = Date.now();
-          student.signInParent = parents?.[checks?.indexOf(true) as number];
+      timeSheet.timeSheetRecords = timeSheet.timeSheetRecords.map(record => {
+        if (payload?.action === Action.SIGN_IN && record.id === payload?.id) {
+          record.signInTime = getCurrentTime();
+          record.signInHour = Date.now();
+          record.signInParent = parents?.[checks?.indexOf(true) as number];
         }
 
-        if (payload?.action === Action.SIGN_OUT && student.id === payload?.id) {
-          student.signOutTime = getCurrentTime();
-          student.signOutHour = Date.now();
-          student.totalDayHours = student.signOutHour - student.signInHour;
-          student.signOutParent = parents?.[checks?.indexOf(true) as number];
+        if (payload?.action === Action.SIGN_OUT && record.id === payload?.id) {
+          record.signOutTime = getCurrentTime();
+          record.signOutHour = Date.now();
+          record.totalDayHours = record.signOutHour - record.signInHour;
+          record.signOutParent = parents?.[checks?.indexOf(true) as number];
         }
 
-        if (payload?.action === Action.CANCEL && student.id === payload?.id) {
-          if (student.signOutTime && student.signInTime) {
-            student.signOutTime = null;
-            student.signOutParent = null;
-            student.totalDayHours = 0;
-            student.signOutHour = 0;
-          } else if (student.signInTime && !student.signOutTime) {
-            student.signInTime = null;
-            student.signInParent = null;
-            student.totalDayHours = 0;
-            student.signInHour = 0;
+        if (payload?.action === Action.CANCEL && record.id === payload?.id) {
+          if (record.signOutTime && record.signInTime) {
+            record.signOutTime = null;
+            record.signOutParent = null;
+            record.totalDayHours = 0;
+            record.signOutHour = 0;
+          } else if (record.signInTime && !record.signOutTime) {
+            record.signInTime = null;
+            record.signInParent = null;
+            record.totalDayHours = 0;
+            record.signInHour = 0;
           }
         }
-        return student;
+        return record;
       });
 
-      return log;
+      return timeSheet;
     });
 
 
-    setItem(StorageKeys.TIME_LOGS, updatedTimeLogs);
+    setItem(StorageKeys.TIME_SHEETS, updatedTimeLogs);
     removeItem(StorageKeys.ACTION_PAYLOAD);
-    props.setTimeLog(updatedTimeLogs.find(log => log.date === getTodayDate()) as TimeLog);
+    props.setTimeLog(updatedTimeLogs.find(timeSheet => timeSheet.date === getTodayDate()) as TimeSheet);
     setSettings({ ...settings, disabled: true } as Settings);
   };
 

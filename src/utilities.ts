@@ -1,5 +1,5 @@
 import { ORDER, SortSetting } from "./TimeSheetTable";
-import { Child, LooksLikeObject, Student } from "./types";
+import { TimeSheetRecord, LooksLikeObject, Student } from "./types";
 
 export function SortValues<T>(values: LooksLikeObject[], sortSetting: SortSetting) {
   if (sortSetting.type === 'number') {
@@ -56,8 +56,8 @@ function sortDesending(a: string, b: string) {
   return 0;
 }
 
-const sortByLastName = (students: Student[] | Child[]) => {
-  return students.sort((a: Student | Child, b: Student | Child,) => {
+const sortByLastName = (students: Student[] | TimeSheetRecord[]) => {
+  return students.sort((a: Student | TimeSheetRecord, b: Student | TimeSheetRecord,) => {
     const aFastName = a.lastName.toLowerCase();
     const bLastName = b.lastName.toLowerCase();
 

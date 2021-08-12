@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getItem, setItem } from './appStorageManager';
 import { getTodayDate } from './dateUtil';
-import { StorageKeys, Student, TimeLog, View } from './types';
+import { StorageKeys, Student, TimeSheet, View } from './types';
 
 interface Warning {
   hasWarning: boolean;
@@ -18,16 +18,16 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
   const [warning, setWarning] = useState<Warning>(defaulWarning);
   const defaultInfo = 'Clicking Create button will create new time sheet for today';
   const [info, setInfo] = useState<string>(defaultInfo);
-  const [timeSheets, setTimeSheets] = useState<TimeLog[]>([]);
+  const [timeSheets, setTimeSheets] = useState<TimeSheet[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
 
-  const handleSave = () => {
-    const newTimelog = { id: timeSheets.length + 1, date, studentList: students };
-    const updatedTimeLogs = [...timeSheets, newTimelog];
-    setItem(StorageKeys.TIME_LOGS, updatedTimeLogs);
+  const handleSave = (e: any) => {
+    const newTimeSheet :TimeSheet = { id: timeSheets.length + 1, date, timeSheetRecords: students };
+    const updatedTimeSheets = [...timeSheets, newTimeSheet];
+    setItem(StorageKeys.TIME_SHEETS, updatedTimeSheets);
     setInfo('A new time sheet has been created for today.');
     props.setView(View.TIME_SHEET);
-    props.setSignal(Date.now())
+    props.setSignal(e)
   };
 
   const clearError = () => {
@@ -48,9 +48,9 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
   );
 
   useEffect(() => {
-    const timeLogs = getItem<TimeLog[]>(StorageKeys.TIME_LOGS) ?? [];
+    const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
 
-    if (timeLogs.find((log: any) => log.date === date)) {
+    if (timeSheets.find((timeSheet: any) => timeSheet.date === date)) {
       setWarning({ hasWarning: true, message: 'Time sheet already exist for today!.' });
       return;
     }
@@ -62,7 +62,7 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
       return;
     }
 
-    setTimeSheets(timeLogs);
+    setTimeSheets(timeSheets);
     setStudents(studentList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.singnal])

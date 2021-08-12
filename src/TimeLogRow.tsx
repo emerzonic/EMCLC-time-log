@@ -1,7 +1,7 @@
-import { Child, UpdateActionPayload, Action } from './types';
+import { TimeSheetRecord, UpdateActionPayload, Action } from './types';
 
 interface TimeLogRowProps {
-  row: Child;
+  row: TimeSheetRecord;
   number: number,
   setPayload: (e: any, action: UpdateActionPayload) => void;
 }

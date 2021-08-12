@@ -1,10 +1,10 @@
-export interface TimeLog {
+export interface TimeSheet {
   id: number,
   date: string,
-  studentList: Child[]
+  timeSheetRecords: TimeSheetRecord[]
 }
 
-export interface Child {
+export interface TimeSheetRecord {
   id: number;
   firstName: string;
   lastName: string;
@@ -57,7 +57,7 @@ export interface LooksLikeObject {
 
 export enum StorageKeys {
   ACTION_PAYLOAD = '__$actionPayload',
-  TIME_LOGS = '__$timelogs',
+  TIME_SHEETS = '__$timelogs',
   STUDENT_LIST = '__$studentList',
   DETAIL_ACTION = '__$detailActionPayload',
 }

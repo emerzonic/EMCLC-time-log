@@ -150,7 +150,7 @@ function seed() {
     'Fidelia Felan',
     'Malik Kirshner',
     'Ashleigh Veit',
-    ];
+  ];
   var s: Student[] = [];
   names.forEach((name, i) => {
     var [f, l] = name.split(" ");
