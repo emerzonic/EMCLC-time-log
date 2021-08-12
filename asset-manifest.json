@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/emerzonic/EMCLC-time-log/static/css/main.2326a0d6.chunk.css",
+    "main.js": "/emerzonic/EMCLC-time-log/static/js/main.16a62804.chunk.js",
+    "main.js.map": "/emerzonic/EMCLC-time-log/static/js/main.16a62804.chunk.js.map",
+    "runtime-main.js": "/emerzonic/EMCLC-time-log/static/js/runtime-main.53d69f4f.js",
+    "runtime-main.js.map": "/emerzonic/EMCLC-time-log/static/js/runtime-main.53d69f4f.js.map",
+    "static/js/2.db29f3e7.chunk.js": "/emerzonic/EMCLC-time-log/static/js/2.db29f3e7.chunk.js",
+    "static/js/2.db29f3e7.chunk.js.map": "/emerzonic/EMCLC-time-log/static/js/2.db29f3e7.chunk.js.map",
+    "static/js/3.377dee3f.chunk.js": "/emerzonic/EMCLC-time-log/static/js/3.377dee3f.chunk.js",
+    "static/js/3.377dee3f.chunk.js.map": "/emerzonic/EMCLC-time-log/static/js/3.377dee3f.chunk.js.map",
+    "index.html": "/emerzonic/EMCLC-time-log/index.html",
+    "static/css/main.2326a0d6.chunk.css.map": "/emerzonic/EMCLC-time-log/static/css/main.2326a0d6.chunk.css.map",
+    "static/js/2.db29f3e7.chunk.js.LICENSE.txt": "/emerzonic/EMCLC-time-log/static/js/2.db29f3e7.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.53d69f4f.js",
+    "static/js/2.db29f3e7.chunk.js",
+    "static/css/main.2326a0d6.chunk.css",
+    "static/js/main.16a62804.chunk.js"
+  ]
+}
