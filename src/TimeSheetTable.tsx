@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { TimeSheetRecord, StorageKeys, TimeSheet, UpdateActionPayload } from './types';
-import { TimeLogRow } from "./TimeLogRow";
+import { TimeLogRow } from "./TimeSheetRow";
 import { setItem } from './appStorageManager';
 import { TypeOfTag } from 'typescript';
 
 export interface TimeSheetTableProps {
-  timeLog: TimeSheet;
+  timeSheet: TimeSheet;
   setSignal: (e: any) => void;
   sort: (sortSetting: SortSetting) => void;
 }
@@ -69,7 +69,7 @@ export function TimeSheetTable(props: TimeSheetTableProps) {
   } 
 
   return (
-    <table className="table table-hover table-sm table-light text-left">
+    <table className="table table-hover table-md table-light text-left">
       <thead>
         <tr className="bg-dark text-light">
           <th scope="col">#</th>
@@ -83,10 +83,10 @@ export function TimeSheetTable(props: TimeSheetTableProps) {
         </tr>
       </thead>
       <tbody>
-        {props.timeLog ? props.timeLog.timeSheetRecords?.map((student: TimeSheetRecord, i: number) => (
+        {props.timeSheet ? props.timeSheet.timeSheetRecords?.map((student: TimeSheetRecord, i: number) => (
           <TimeLogRow key={i} number={i + 1} setPayload={setPayload} row={student} />)) :
           <tr className="text-left">
-            <td colSpan={7}>No time log has been created for today.</td>
+            <td colSpan={7}>No time sheet has been created for today.</td>
           </tr>}
       </tbody>
     </table>

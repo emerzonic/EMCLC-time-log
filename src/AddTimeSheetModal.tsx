@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getItem, setItem } from './appStorageManager';
 import { getTodayDate } from './dateUtil';
-import { StorageKeys, Student, TimeSheet, View } from './types';
+import { StorageKeys, Student, TimeSheet, TimeSheetRecord, View } from './types';
 
 interface Warning {
   hasWarning: boolean;
@@ -22,7 +22,8 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
   const [students, setStudents] = useState<Student[]>([]);
 
   const handleSave = (e: any) => {
-    const newTimeSheet :TimeSheet = { id: timeSheets.length + 1, date, timeSheetRecords: students };
+    const records: TimeSheetRecord[] = students.map(({id, firstName, lastName}) => ({id, firstName, lastName})as TimeSheetRecord)
+    const newTimeSheet :TimeSheet = { id: timeSheets.length + 1, date, timeSheetRecords: records };
     const updatedTimeSheets = [...timeSheets, newTimeSheet];
     setItem(StorageKeys.TIME_SHEETS, updatedTimeSheets);
     setInfo('A new time sheet has been created for today.');
@@ -50,7 +51,7 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
   useEffect(() => {
     const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
 
-    if (timeSheets.find((timeSheet: any) => timeSheet.date === date)) {
+    if (timeSheets.some((timeSheet: any) => timeSheet.date === date)) {
       setWarning({ hasWarning: true, message: 'Time sheet already exist for today!.' });
       return;
     }

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { UpdateActionPayload, TimeSheet as TimeSheet, Student, Action, StorageKeys } from './types';
+import { UpdateActionPayload, TimeSheet, Student, Action, StorageKeys } from './types';
 import { getCurrentTime, getTodayDate } from "./dateUtil";
 import { getItem, removeItem, setItem } from './appStorageManager';
 
 interface SignInModalProps {
-  setTimeLog: (timeLog: TimeSheet) => void;
+  setTimeSheet: (timeLog: TimeSheet) => void;
   signal: any;
 }
 
@@ -25,8 +25,8 @@ export function SignInModal(props: SignInModalProps) {
       const confirmButtonText = `Confirm ${payload?.action}`;
       const studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
       const foundStudent = studentList.find((student: Student) => student.id === payload?.id);
-      const checks = foundStudent?.parentOrGuardians.map((_, i) => i === 0);
-      const parents = foundStudent?.parentOrGuardians;
+      const checks = foundStudent?.parentsOrGuardians.map((_, i) => i === 0);
+      const parents = foundStudent?.parentsOrGuardians;
       setSettings({ payload, checks, confirmButtonText, parents, disabled: false } as Settings);
     }
   }, [props.signal]);
@@ -89,7 +89,7 @@ export function SignInModal(props: SignInModalProps) {
 
     setItem(StorageKeys.TIME_SHEETS, updatedTimeLogs);
     removeItem(StorageKeys.ACTION_PAYLOAD);
-    props.setTimeLog(updatedTimeLogs.find(timeSheet => timeSheet.date === getTodayDate()) as TimeSheet);
+    props.setTimeSheet(updatedTimeLogs.find(timeSheet => timeSheet.date === getTodayDate()) as TimeSheet);
     setSettings({ ...settings, disabled: true } as Settings);
   };
 

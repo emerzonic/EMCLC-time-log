@@ -4,7 +4,7 @@ import { StorageKeys, Student, View } from './types';
 
 export function AddStudentModal(props: any) {
   //seed();
-  const defaultStudent = { id: null, firstName: '', lastName: '', parentOrGuardians: [] };
+  const defaultStudent = { id: null, firstName: '', lastName: '', parentsOrGuardians: [] };
   const [student, setStudent] = useState<Student>(defaultStudent);
   const [parentOne, setParentOne] = useState<string>('');
   const [parentTwo, setParentTwo] = useState<string>('');
@@ -154,7 +154,7 @@ function seed() {
   var s: Student[] = [];
   names.forEach((name, i) => {
     var [f, l] = name.split(" ");
-    s.push({ id: i + 1, firstName: f, lastName: l, parentOrGuardians: names.filter(n => n.startsWith(f[0])) });
+    s.push({ id: i + 1, firstName: f, lastName: l, parentsOrGuardians: names.filter(n => n.startsWith(f[0])) });
 
   });
 

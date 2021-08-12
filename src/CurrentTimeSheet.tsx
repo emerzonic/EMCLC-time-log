@@ -3,7 +3,7 @@ import { TimeSheetRecord, StorageKeys, TimeSheet } from './types';
 import { getTodayDate } from "./dateUtil";
 import { DigitalClock } from "./DigitalClock";
 import { SignInModal } from "./SignInModal";
-import { TimeLogsHistory } from './TimeLogsHistory';
+import { TimeSheetsHistory } from './TimeSheetsHistory';
 import { SortSetting, TimeSheetTable } from './TimeSheetTable';
 import { getItem } from './appStorageManager';
 import { SortValues } from './utilities';
@@ -12,12 +12,12 @@ export interface CurrentTimeSheetProps {
   signal: any
 }
 export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
-  const [timeLog, setTimeLog] = useState<TimeSheet | undefined>(update());
+  const [timeSheet, setTimeSheet] = useState<TimeSheet | undefined>(update());
   const [signal, setSignal] = useState(null);
   function update() {
-    const timeLogs = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
-    const todayTimeLog = timeLogs.find((log: TimeSheet) => log.date === getTodayDate());
-    return todayTimeLog;
+    const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
+    const todayTimeSheet = timeSheets.find((timeSheet: TimeSheet) => timeSheet.date === getTodayDate());
+    return todayTimeSheet;
   }
 
   const sort = (sortSetting: SortSetting) => {
@@ -25,22 +25,22 @@ export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
     if (timeSheet) {
       timeSheet.timeSheetRecords = SortValues<TimeSheetRecord>(timeSheet?.timeSheetRecords, sortSetting);
     }
-    setTimeLog(timeSheet);
+    setTimeSheet(timeSheet);
   }
 
 
   useEffect(() => {
-    const timeSheets = update();
-    setTimeLog(timeSheets);
+    const timeSheet = update();
+    setTimeSheet(timeSheet);
   }, [props.signal])
 
   return (
     <div className="fade-in">
-      <h1 className="pt-4">{timeLog?.date || getTodayDate()}</h1>
+      <h1 className="pt-4">{timeSheet?.date || getTodayDate()}</h1>
       <DigitalClock />
-      <TimeSheetTable timeLog={timeLog as TimeSheet} setSignal={setSignal} sort={sort} />
-      <TimeLogsHistory />
-      <SignInModal setTimeLog={setTimeLog} signal={signal} />
+      <TimeSheetTable timeSheet={timeSheet as TimeSheet} setSignal={setSignal} sort={sort} />
+      <TimeSheetsHistory />
+      <SignInModal setTimeSheet={setTimeSheet} signal={signal} />
     </div>
   );
 }

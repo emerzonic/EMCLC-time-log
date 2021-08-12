@@ -49,7 +49,6 @@ export function DetailModal(props: DetailProps) {
                       <th scope="col">Sign In By</th>
                       <th scope="col">Time Out</th>
                       <th scope="col">Sign Out By</th>
-                      <th scope="col">Total Hours</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -61,7 +60,6 @@ export function DetailModal(props: DetailProps) {
                         <td>{timeSheet.signInParent || '-'}</td>
                         <td>{timeSheet.signOutTime || '-'}</td>
                         <td>{timeSheet.signOutParent || '-'}</td>
-                        <td className="text-center">{(timeSheet.signOutHour && timeSheet.signInHour) ? timeSheet.signOutHour - timeSheet.signInHour : 0}</td>
                       </tr>
                     )) : null}
                   </tbody>

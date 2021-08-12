@@ -39,9 +39,9 @@ export function ManageStudents(props: any) {
               <td>{i + 1}</td>
               <td>{s.firstName}</td>
               <td>{s.lastName}</td>
-              <td>{s.parentOrGuardians[0]}</td>
-              <td>{s.parentOrGuardians[1]}</td>
-              <td>{s.parentOrGuardians[2]}</td>
+              <td>{s.parentsOrGuardians[0]}</td>
+              <td>{s.parentsOrGuardians[1]}</td>
+              <td>{s.parentsOrGuardians[2]}</td>
               <td className="text-center">
                 <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.VIEW })} data-toggle="modal" data-target=".detail-modal" type="button" className="btn btn-outline-primary btn-sm mr-2">{<i className="fa fa-id-card"></i>}View</button>
               </td>

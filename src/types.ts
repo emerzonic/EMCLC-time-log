@@ -48,7 +48,7 @@ export interface Student {
   id: number | null;
   firstName: string;
   lastName: string;
-  parentOrGuardians: string[];
+  parentsOrGuardians: string[];
 }
 
 export interface LooksLikeObject {
@@ -60,4 +60,5 @@ export enum StorageKeys {
   TIME_SHEETS = '__$timelogs',
   STUDENT_LIST = '__$studentList',
   DETAIL_ACTION = '__$detailActionPayload',
+  VIEW = '__$time_sheet_view',
 }

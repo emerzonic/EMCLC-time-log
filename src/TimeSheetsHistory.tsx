@@ -3,7 +3,7 @@ import { TimeSheetRecord, StorageKeys, TimeSheet } from './types';
 import { getItem } from './appStorageManager';
 import { CsvDownload } from './CsvDownload';
 
-export function TimeLogsHistory(props: any) {
+export function TimeSheetsHistory(props: any) {
   const [timeSheets,] = useState<TimeSheet[]>(() => {
     const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];;
     return timeSheets;
@@ -20,7 +20,7 @@ export function TimeLogsHistory(props: any) {
       'Sign Out By': record.signOutParent ?? '-',
     }));
   };
-  console.log(timeSheets)
+
   return (
     <>
       <hr />
@@ -62,7 +62,7 @@ export function TimeLogsHistory(props: any) {
               </div>
             </div>
           </div>
-        </div>)) : 'Not time sheet report is available.'}
+        </div>)) : <p className='text-left'>Not time sheet report is available.</p>}
     </>
   );
 }
