@@ -16,7 +16,8 @@ export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
   const [signal, setSignal] = useState(null);
   function update() {
     const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
-    const todayTimeSheet = timeSheets.find((timeSheet: TimeSheet) => timeSheet.date === getTodayDate());
+    const todayTimeSheet = timeSheets[timeSheets.length - 1];
+    //const todayTimeSheet = timeSheets.find((timeSheet: TimeSheet) => timeSheet.date === getTodayDate());
     return todayTimeSheet;
   }
 

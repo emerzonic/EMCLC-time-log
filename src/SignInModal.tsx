@@ -25,9 +25,9 @@ export function SignInModal(props: SignInModalProps) {
       const confirmButtonText = `Confirm ${payload?.action}`;
       const studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
       const foundStudent = studentList.find((student: Student) => student.id === payload?.id);
-      const checks = foundStudent?.parentsOrGuardians.map((_, i) => i === 0);
-      const parents = foundStudent?.parentsOrGuardians;
-      setSettings({ payload, checks, confirmButtonText, parents, disabled: false } as Settings);
+      const parentNames = Object.values(foundStudent?.parents || {}).filter(v => v);
+      const checks = parentNames.map((_, i) => i === 0);
+      setSettings({ payload, checks, confirmButtonText, parents: parentNames, disabled: false } as Settings);
     }
   }, [props.signal]);
 
@@ -86,7 +86,6 @@ export function SignInModal(props: SignInModalProps) {
       return timeSheet;
     });
 
-
     setItem(StorageKeys.TIME_SHEETS, updatedTimeLogs);
     removeItem(StorageKeys.ACTION_PAYLOAD);
     props.setTimeSheet(updatedTimeLogs.find(timeSheet => timeSheet.date === getTodayDate()) as TimeSheet);
@@ -97,7 +96,7 @@ export function SignInModal(props: SignInModalProps) {
 
   const alert = (
     <div className="font-weight-bold text-success modal-title fade-in">
-      {`${payload?.action} action has been succcessfully completed!`}
+      {`${payload?.action} succcessfully completed!`}
     </div>
   );
 

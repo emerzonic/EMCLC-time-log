@@ -10,12 +10,12 @@ export function DigitalClock() {
   };
 
   useEffect(() => {
-    startTime();
+    startTime()
+    return () => startTime();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   return (
-    <div className="display-4">{clock}</div>
+    <div className="display-3">{clock}</div>
   );
 }

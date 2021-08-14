@@ -42,7 +42,7 @@
 	animation-name: fadeInOpacity;
 	animation-iteration-count: 1;
 	animation-timing-function: ease-in;
-	animation-duration: 1s;
+	animation-duration: 0.5s;
 }
 
 @keyframes fadeInOpacity {
@@ -59,4 +59,16 @@ hr {
   margin-bottom: 1rem;
   border: 0;
   border-top: 4px solid rgba(0, 0, 0, 0.1);
+}
+
+.table_sort { 
+  cursor: pointer; 
+}
+
+.invisible-item { 
+  visibility: hidden;
+}
+
+.width-10 { 
+  width: 13%;
 }

@@ -7,6 +7,7 @@ interface Warning {
   hasWarning: boolean;
   message: string;
 }
+
 interface TimeSheetModalProps {
   setSignal: (e: any) => void;
   singnal: any;
@@ -22,8 +23,13 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
   const [students, setStudents] = useState<Student[]>([]);
 
   const handleSave = (e: any) => {
-    const records: TimeSheetRecord[] = students.map(({id, firstName, lastName}) => ({id, firstName, lastName})as TimeSheetRecord)
-    const newTimeSheet :TimeSheet = { id: timeSheets.length + 1, date, timeSheetRecords: records };
+    const records: TimeSheetRecord[] = students.map(({ id, firstName, lastName }) => ({ id, firstName, lastName }) as TimeSheetRecord)
+    const newTimeSheet: TimeSheet = { id: Date.now(), date, timeSheetRecords: records };
+
+    if (timeSheets.length === 10) {
+      timeSheets.shift();
+    }
+
     const updatedTimeSheets = [...timeSheets, newTimeSheet];
     setItem(StorageKeys.TIME_SHEETS, updatedTimeSheets);
     setInfo('A new time sheet has been created for today.');
@@ -41,7 +47,6 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
     </div>
   );
 
-
   const successAlert = (
     <div className="font-weight-bold modal-title">
       {info}
@@ -52,7 +57,7 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
     const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
 
     if (timeSheets.some((timeSheet: any) => timeSheet.date === date)) {
-      setWarning({ hasWarning: true, message: 'Time sheet already exist for today!.' });
+      setWarning({ hasWarning: true, message: 'Time sheet already exist for today!' });
       return;
     }
 
@@ -83,7 +88,7 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
           </div>
           <div className="modal-footer">
             <button onClick={clearError} type="button" className="btn btn-secondary" data-dismiss="modal">{<i className="fa fa-times" aria-hidden="true"></i>} {warning.hasWarning ? 'Close' : 'Cancel'}</button>
-            <button onClick={handleSave} type="button" data-dismiss="modal" className={warning.hasWarning || info !== defaultInfo ? "btn btn-primary disabled" : "btn btn-primary"}>Create</button>
+            <button onClick={handleSave} type="button" data-dismiss="modal" className={warning.hasWarning || info !== defaultInfo ? "btn btn-primary d-none" : "btn btn-primary"}>Create</button>
           </div>
         </div>
       </div>

@@ -27,6 +27,7 @@ export function DetailModal(props: DetailProps) {
       }
       return result;
     }, [] as TimeSheetReportRecord[]);
+
     const foundStudent = studentList.find((student: Student) => student.id === payload?.id) as Student;
     const newStudentDetial: StudentDetail = { student: foundStudent, timeSheets: studentTimeSheets };
     setStudentDetail(newStudentDetial);
@@ -53,7 +54,7 @@ export function DetailModal(props: DetailProps) {
                   </thead>
                   <tbody>
                     {studentDetail?.timeSheets?.length ? studentDetail.timeSheets.map((timeSheet: TimeSheetReportRecord, i: number) => (
-                      <tr>
+                      <tr key={i}>
                         <td>{i + 1}.</td>
                         <td>{timeSheet.date || '-'}</td>
                         <td>{timeSheet.signInTime || '-'}</td>

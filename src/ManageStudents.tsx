@@ -3,20 +3,22 @@ import { getItem, setItem } from './appStorageManager';
 import { DetailModal } from './DetailModel';
 import { DetailAction, DetailActionPayload, StorageKeys, Student } from './types';
 
-export function ManageStudents(props: any) {
+interface ManageStudentsProps {
+  signal?: any
+  setSignal: (e: any) => void;
+}
+export function ManageStudents(props: ManageStudentsProps) {
   const [students, setStudents] = useState<Student[]>([])
-  const [signal, setSignal] = useState<any>(null)
 
   useEffect(() => {
     const studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
     setStudents(studentList);
-  }, [signal]);
+  }, [props.signal]);
 
   const setAction = (e: any, payload: DetailActionPayload) => {
     setItem(StorageKeys.DETAIL_ACTION, payload);
-    setSignal(e);
+    props.setSignal(e);
   }
-
 
   return (
     <>
@@ -34,21 +36,25 @@ export function ManageStudents(props: any) {
           </tr>
         </thead>
         <tbody>
-          {students.map((s, i) =>
+          {students.length ? students.map((s, i) =>
             <tr key={s.id} >
               <td>{i + 1}</td>
               <td>{s.firstName}</td>
               <td>{s.lastName}</td>
-              <td>{s.parentsOrGuardians[0]}</td>
-              <td>{s.parentsOrGuardians[1]}</td>
-              <td>{s.parentsOrGuardians[2]}</td>
+              <td>{s.parents.parentOne}</td>
+              <td>{s.parents.parentTwo}</td>
+              <td>{s.parents.parentThree}</td>
               <td className="text-center">
-                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.VIEW })} data-toggle="modal" data-target=".detail-modal" type="button" className="btn btn-outline-primary btn-sm mr-2">{<i className="fa fa-id-card"></i>}View</button>
+                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.EDIT })} data-toggle="modal" data-target="#addStudentModal" type="button" className="btn btn-outline-warning btn-sm mr-2 font-weight-bold">{<i className="fa fa-id-card"></i>}Edit</button>
+                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.VIEW })} data-toggle="modal" data-target=".detail-modal" type="button" className="btn btn-outline-primary btn-sm mr-2 font-weight-bold">{<i className="fa fa-id-card"></i>}Time Sheets</button>
               </td>
+            </tr>) :
+            (<tr>
+              <td className="py-2" colSpan={7}>No student exist. Student information will displace here when added.</td>
             </tr>)}
         </tbody>
       </table>
-      <DetailModal signal={signal} setSignal={setSignal} />
+      <DetailModal signal={props.signal} setSignal={props.setSignal} />
     </>
   );
 }

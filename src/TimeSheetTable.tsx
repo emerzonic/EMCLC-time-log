@@ -61,23 +61,23 @@ export function TimeSheetTable(props: TimeSheetTableProps) {
     props.sort(setting as SortSetting);
   }
 
-  const getSortIcon =(sortByField: string) => {
+  const getSortIcon = (sortByField: string) => {
     const setting = sortSettings.find(s => s.field === sortByField);
-    return setting?.order === ORDER.ASC ? 
-    <i className="fa fa-sort-amount-asc" aria-hidden="true"></i> : 
-    <i className="fa fa-sort-amount-desc" aria-hidden="true"></i>
-  } 
+    return setting?.order === ORDER.ASC ?
+      <i className="fa fa-sort-amount-asc text-primary" aria-hidden="true"></i> :
+      <i className="fa fa-sort-amount-desc text-primary" aria-hidden="true"></i>
+  }
 
   return (
-    <table className="table table-hover table-md table-light text-left">
+    <table className="table table-hover table-sm table-light text-left">
       <thead>
         <tr className="bg-dark text-light">
           <th scope="col">#</th>
-          <th onClick={() => sort(Field.FIRST_NAME)} scope="col">First Name {getSortIcon(Field.FIRST_NAME)}</th>
-          <th onClick={() => sort(Field.LAST_NAME)} scope="col">Last Name {getSortIcon(Field.LAST_NAME)}</th>
-          <th onClick={() => sort(Field.SIGN_IN)} scope="col">Time In {getSortIcon(Field.SIGN_IN)}</th>
+          <th className="table_sort" onClick={() => sort(Field.FIRST_NAME)} scope="col">First Name {getSortIcon(Field.FIRST_NAME)}</th>
+          <th className="table_sort" onClick={() => sort(Field.LAST_NAME)} scope="col">Last Name {getSortIcon(Field.LAST_NAME)}</th>
+          <th className="table_sort" onClick={() => sort(Field.SIGN_IN)} scope="col">Time In {getSortIcon(Field.SIGN_IN)}</th>
           <th scope="col">Sign In By</th>
-          <th onClick={() => sort(Field.SIGN_OUT)} scope="col">Time Out {getSortIcon(Field.SIGN_OUT)}</th>
+          <th className="table_sort" onClick={() => sort(Field.SIGN_OUT)} scope="col">Time Out {getSortIcon(Field.SIGN_OUT)}</th>
           <th scope="col">Sign Out By</th>
           <th className="text-center" scope="col">Action</th>
         </tr>

@@ -1,5 +1,5 @@
 import { ORDER, SortSetting } from "./TimeSheetTable";
-import { TimeSheetRecord, LooksLikeObject, Student } from "./types";
+import { LooksLikeObject } from "./types";
 
 export function SortValues<T>(values: LooksLikeObject[], sortSetting: SortSetting) {
   if (sortSetting.type === 'number') {
@@ -12,7 +12,7 @@ function sortNumbers(sortSetting: SortSetting): ((a: LooksLikeObject, b: LooksLi
   return (a: LooksLikeObject, b: LooksLikeObject) => {
     const aValue = a[sortSetting.field] ?? 0;
     const bValue = b[sortSetting.field] ?? 0;
-    console.log(aValue, bValue);
+
     if (sortSetting.order === ORDER.ASC) {
       return aValue - bValue;
     }
@@ -25,7 +25,7 @@ function sortStrings(sortSetting: SortSetting): ((a: LooksLikeObject, b: LooksLi
   return (a: LooksLikeObject, b: LooksLikeObject) => {
     const aValue = a[sortSetting.field]?.toLowerCase();
     const bValue = b[sortSetting.field]?.toLowerCase();
-    console.log(aValue, bValue);
+
     if (sortSetting.order === ORDER.ASC) {
       return sortAsending(aValue, bValue);
     }
@@ -56,18 +56,3 @@ function sortDesending(a: string, b: string) {
   return 0;
 }
 
-const sortByLastName = (students: Student[] | TimeSheetRecord[]) => {
-  return students.sort((a: Student | TimeSheetRecord, b: Student | TimeSheetRecord,) => {
-    const aFastName = a.lastName.toLowerCase();
-    const bLastName = b.lastName.toLowerCase();
-
-    if (aFastName < bLastName) {
-      return -1;
-    }
-    if (aFastName > bLastName) {
-      return 1;
-    }
-
-    return 0;
-  })
-}

@@ -1,10 +1,24 @@
-import { useState } from 'react';
-import { getItem, setItem } from './appStorageManager';
-import { StorageKeys, Student, View } from './types';
+import { useEffect, useState } from 'react';
+import { getItem, removeItem, setItem } from './appStorageManager';
+import { getTodayDate } from './dateUtil';
+import { DetailAction, DetailActionPayload, Parents, StorageKeys, Student, TimeSheet, TimeSheetRecord } from './types';
 
-export function AddStudentModal(props: any) {
+interface AddStudentModalProps {
+  signal?: any;
+  setView: (e: any) => void;
+  setSignal: (e: any) => void;
+}
+export function AddStudentModal(props: AddStudentModalProps) {
   //seed();
-  const defaultStudent = { id: null, firstName: '', lastName: '', parentsOrGuardians: [] };
+  const defaultStudent = {
+    id: null,
+    firstName: '',
+    lastName: '',
+    parents: {
+      parentOne: '',
+    }
+  };
+
   const [student, setStudent] = useState<Student>(defaultStudent);
   const [parentOne, setParentOne] = useState<string>('');
   const [parentTwo, setParentTwo] = useState<string>('');
@@ -13,8 +27,23 @@ export function AddStudentModal(props: any) {
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
-  const onNameChange = (keyValuePar: any) => {
-    setStudent({ ...student, ...keyValuePar });
+  useEffect(() => {
+    const payload = getItem<DetailActionPayload>(StorageKeys.DETAIL_ACTION);
+    if (payload?.action === DetailAction.EDIT) {
+      const list = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
+      const editStudent = list.find(student => student.id === payload.id);
+      if (editStudent) {
+        setStudent(editStudent);
+        setParentOne(editStudent.parents.parentOne || '');
+        setParentTwo(editStudent.parents.parentTwo || '');
+        setParentThree(editStudent.parents.parentThree || '');
+        setParentCount(Object.values(editStudent.parents).filter(v => v).length);
+      }
+    }
+  }, [props.signal])
+
+  const onNameChange = (keyValuePair: any) => {
+    setStudent({ ...student, ...keyValuePair });
   };
 
   const updateForm = () => {
@@ -45,14 +74,65 @@ export function AddStudentModal(props: any) {
     setShowConfirmation(false);
   };
 
-  const submitInfo = () => {
-    const list = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
-    const parents = [parentOne, parentTwo, parentThree].filter(p => p);
-    const newStudent = { ...student, id: list.length + 1, parentOrGuardians: parents };
+  const addNewStudentInfo = (list: Student[], parents: Parents) => {
+    const newStudent = { ...student, id: Date.now(), parents };
     const updatedList = [...list, newStudent];
     setItem(StorageKeys.STUDENT_LIST, updatedList);
+
+    const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
+
+    if (timeSheets.length) {
+      timeSheets.forEach((timeSheet) => {
+        if (timeSheet.date === getTodayDate()) {
+          timeSheet.timeSheetRecords.push({
+            id: newStudent.id,
+            firstName: newStudent.firstName,
+            lastName: newStudent.lastName
+          } as TimeSheetRecord);
+        }
+      });
+
+      setItem(StorageKeys.TIME_SHEETS, timeSheets);
+    }
+  }
+
+  const editStudentInfo = (list: Student[], parents: Parents) => {
+    const updatedList = list.map((each) => {
+      if (each.id === student.id) {
+        return { ...student, parents };
+      }
+      return each;
+    });
+
+    setItem(StorageKeys.STUDENT_LIST, updatedList);
+    const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
+
+    for (const timeSheet of timeSheets) {
+      timeSheet.timeSheetRecords.forEach((record) => {
+        if (record.id === student.id) {
+          record.firstName = student.firstName;
+          record.lastName = student.lastName;
+        }
+      });
+    }
+
+    setItem(StorageKeys.TIME_SHEETS, timeSheets);
+    removeItem(StorageKeys.DETAIL_ACTION);
+  }
+
+  const submitInfo = (e: any) => {
+    const list = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
+    const parents: Parents = { parentOne, parentTwo, parentThree };
+    const payload = getItem<DetailActionPayload>(StorageKeys.DETAIL_ACTION);
+
+    if (payload?.action === DetailAction.EDIT) {
+      editStudentInfo(list, parents);
+    } else {
+      addNewStudentInfo(list, parents);
+    }
+
+    props.setSignal(e);
     resetForm();
-    props.setView(View.MANAGE_STUDENTS);
   };
 
   const confirmation = (
@@ -75,7 +155,7 @@ export function AddStudentModal(props: any) {
     <div className="text-danger fade-in">Required.</div>
   );
 
-  const add = 'Add Student';
+  const add = 'Add Student Information';
   const confirm = 'Review Student Detail';
 
   return (
@@ -91,30 +171,30 @@ export function AddStudentModal(props: any) {
           {showConfirmation ? confirmation : <div className="modal-body text-left">
             <form>
               <div className="form-group">
-                <label>First Name</label>
-                <input type="text" onChange={(e) => onNameChange({ firstName: e.target.value })} value={student.firstName} className="form-control" aria-describedby="emailHelp" placeholder="Enter email" />
+                <label className="text-font-bold" >First Name</label>
+                <input type="text" onChange={(e) => onNameChange({ firstName: e.target.value })} value={student.firstName} className="form-control" aria-describedby="emailHelp" placeholder="Enter first name." />
                 {error && !student.firstName ? inValid : ''}
               </div>
               <div className="form-group">
-                <label>Last Name</label>
-                <input type="text" onChange={(e) => onNameChange({ lastName: e.target.value })} value={student.lastName} className="form-control" placeholder="Enter Last Name" />
+                <label className="text-font-bold" >Last Name</label>
+                <input type="text" onChange={(e) => onNameChange({ lastName: e.target.value })} value={student.lastName} className="form-control" placeholder="Enter last name." />
                 {error && !student.lastName ? inValid : ''}
               </div>
               <div className="form-group">
-                <label>Parent/Guardian 1</label>
-                <input type="text" onChange={(e) => setParentOne(e.target.value)} value={parentOne} className="form-control" placeholder="Enter Parent/Guadian" />
+                <label className="text-font-bold" >Parent/Guardian 1</label>
+                <input type="text" onChange={(e) => setParentOne(e.target.value)} value={parentOne} className="form-control" placeholder="Enter first parent or guadian full name." />
                 {error && !parentOne ? inValid : ''}
               </div>
               <div className={count > 1 ? 'form-group' : "form-group d-none"}>
-                <label>Parent/Guardian 2</label>
-                <input type="text" onChange={(e) => setParentTwo(e.target.value)} value={parentTwo} className="form-control" placeholder="Enter Parent/Guadian 2" />
+                <label className="text-font-bold" >Parent/Guardian 2</label>
+                <input type="text" onChange={(e) => setParentTwo(e.target.value)} value={parentTwo} className="form-control" placeholder="Enter second parent or guadian full name." />
               </div>
               <div className={count > 2 ? 'form-group' : "form-group d-none"}>
-                <label>Parent/Guardian 3</label>
-                <input type="text" onChange={(e) => setParentThree(e.target.value)} value={parentThree} className="form-control" placeholder="Enter Parent/Guadian 3" />
+                <label className="text-font-bold" >Parent/Guardian 3</label>
+                <input type="text" onChange={(e) => setParentThree(e.target.value)} value={parentThree} className="form-control" placeholder="Enter third parent or guadian full name." />
               </div>
             </form>
-            <button onClick={updateForm} type="button" className={count === 3 ? "btn btn-primary btn-sm d-none" : "btn btn-primary btn-sm"}>{<i className="fa fa-plus" aria-hidden="true"></i>} Add Another Parent/Guardian</button>
+            <button onClick={updateForm} type="button" className={count === 3 ? "btn btn-primary btn-sm d-none" : "btn btn-primary btn-sm"}>{<i className="fa fa-plus" aria-hidden="true"></i>} Add another parent or guardian</button>
           </div>}
           <div className="modal-footer">
             {showConfirmation && <button onClick={handleEdit} type="button" className="btn btn-outline-warning">Edit</button>}
@@ -128,37 +208,45 @@ export function AddStudentModal(props: any) {
 }
 
 
-function seed() {
-  const names = [
-    'Nerissa Sward',
-    'Chelsea Galaviz',
-    'Rema Prochaska',
-    'Dustin Spurrier',
-    'Rosalva Merideth',
-    'Daniella Pleiman',
-    'Marlys Melvin',
-    'Sherice Orner',
-    'Odelia Madere',
-    'Keisha Mckinsey',
-    'Gary Vereen',
-    'Terrilyn Joynes',
-    'Solomon Flanders',
-    'Dedra Beech',
-    'Ken Demont',
-    'Loan Felder',
-    'Elba Isherwood',
-    'Fidelia Felan',
-    'Malik Kirshner',
-    'Ashleigh Veit',
-  ];
-  var s: Student[] = [];
-  names.forEach((name, i) => {
-    var [f, l] = name.split(" ");
-    s.push({ id: i + 1, firstName: f, lastName: l, parentsOrGuardians: names.filter(n => n.startsWith(f[0])) });
+// function seed() {
+//   const names = [
+//     'Nerissa Sward',
+//     'Chelsea Galaviz',
+//     'Rema Prochaska',
+//     'Dustin Spurrier',
+//     'Rosalva Merideth',
+//     'Daniella Pleiman',
+//     'Marlys Melvin',
+//     'Sherice Orner',
+//     'Odelia Madere',
+//     'Keisha Mckinsey',
+//     'Gary Vereen',
+//     'Terrilyn Joynes',
+//     'Solomon Flanders',
+//     'Dedra Beech',
+//     'Ken Demont',
+//     'Loan Felder',
+//     'Elba Isherwood',
+//     'Fidelia Felan',
+//     'Malik Kirshner',
+//     'Ashleigh Veit',
+//   ];
+//   var s: Student[] = [];
+//   names.forEach((name, i) => {
+//     var [f, l] = name.split(" ");
+//     s.push({
+//       id: i + 1,
+//       firstName: f,
+//       lastName: l,
+//       parents: {
+//         parentOne: names[Math.floor(Math.random() * names.length)],
+//         parentTwo: names[Math.floor(Math.random() * names.length)],
+//         parentThree: names[Math.floor(Math.random() * names.length)],
+//       }
+//     });
+//   });
 
-  });
-
-  if (!getItem(StorageKeys.STUDENT_LIST)) {
-    setItem(StorageKeys.STUDENT_LIST, s);
-  }
-}
+//   if (!getItem(StorageKeys.STUDENT_LIST)) {
+//     setItem(StorageKeys.STUDENT_LIST, s);
+//   }
+// }

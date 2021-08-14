@@ -9,8 +9,7 @@ export function TimeSheetsHistory(props: any) {
     return timeSheets;
   });
 
-  const generateDownloadData = (timeSheets: TimeSheetRecord[]) => {
-    console.log(timeSheets)
+  const generateDownloadData = (timeSheets: TimeSheetRecord[] = []) => {
     return timeSheets.map((record, i) => ({
       '#': i + 1,
       'Name': `${record.firstName} ${record.lastName}`,
@@ -28,7 +27,7 @@ export function TimeSheetsHistory(props: any) {
       {timeSheets.length ? timeSheets.map((timeSheet, index) => (
         <div className="text-left" key={index}>
           <p className="mb-2 mt-3">
-            <button className="btn  btn-sm btn-primary text-left mr-2 w-25" type="button" data-toggle="collapse" data-target={`#${timeSheet.id}`} aria-expanded="false" aria-controls={`#${timeSheet.id}`}>
+            <button className="btn  btn-sm btn-primary text-left mr-2 width-10" type="button" data-toggle="collapse" data-target={`#${timeSheet.id}`} aria-expanded="false" aria-controls={`#${timeSheet.id}`}>
               <i className="fa fa-calendar-o" aria-hidden="true"></i> {timeSheet.date}
             </button>
             <CsvDownload data={generateDownloadData(timeSheet.timeSheetRecords)} title={`Time Sheet ${timeSheet.date}`} />

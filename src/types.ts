@@ -44,11 +44,17 @@ export interface UpdateActionPayload {
   action?: Action
 }
 
+export interface Parents {
+  parentOne: string;
+  parentTwo?: string | null;
+  parentThree?: string | null;
+}
+
 export interface Student {
   id: number | null;
   firstName: string;
   lastName: string;
-  parentsOrGuardians: string[];
+  parents: Parents;
 }
 
 export interface LooksLikeObject {
