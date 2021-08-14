@@ -45,8 +45,8 @@ export function ManageStudents(props: ManageStudentsProps) {
               <td>{s.parents.parentTwo}</td>
               <td>{s.parents.parentThree}</td>
               <td className="text-center">
-                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.EDIT })} data-toggle="modal" data-target="#addStudentModal" type="button" className="btn btn-outline-warning btn-sm mr-2 font-weight-bold">{<i className="fa fa-id-card"></i>}Edit</button>
-                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.VIEW })} data-toggle="modal" data-target=".detail-modal" type="button" className="btn btn-outline-primary btn-sm mr-2 font-weight-bold">{<i className="fa fa-id-card"></i>}Time Sheets</button>
+                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.EDIT })} data-toggle="modal" data-target="#addStudentModal" type="button" className="btn btn-warning btn-sm mr-2 font-weight-bold">{<i className="fa fa-edit" aria-hidden="true"></i>} Edit</button>
+                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.VIEW })} data-toggle="modal" data-target=".detail-modal" type="button" className="btn btn-primary btn-sm mr-2 font-weight-bold">{<i className="fa fa-calendar" aria-hidden="true"></i>} Time Sheets</button>
               </td>
             </tr>) :
             (<tr>

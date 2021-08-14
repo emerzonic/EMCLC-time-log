@@ -197,9 +197,9 @@ export function AddStudentModal(props: AddStudentModalProps) {
             <button onClick={updateForm} type="button" className={count === 3 ? "btn btn-primary btn-sm d-none" : "btn btn-primary btn-sm"}>{<i className="fa fa-plus" aria-hidden="true"></i>} Add another parent or guardian</button>
           </div>}
           <div className="modal-footer">
-            {showConfirmation && <button onClick={handleEdit} type="button" className="btn btn-outline-warning">Edit</button>}
+            {showConfirmation && <button onClick={handleEdit} type="button" className="btn btn-warning">Edit</button>}
             <button onClick={resetForm} type="button" className="btn btn-secondary" data-dismiss="modal">{<i className="fa fa-times" aria-hidden="true"></i>} Cancel</button>
-            <button onClick={showConfirmation ? submitInfo : confirmInfo} data-dismiss={showConfirmation ? "modal" : ""} type="button" className="btn btn-primary">Submit</button>
+            <button onClick={showConfirmation ? submitInfo : confirmInfo} data-dismiss={showConfirmation ? "modal" : ""} type="button" className="btn btn-primary"> {<i className="fa fa-save" aria-hidden="true"></i>} Submit</button>
           </div>
         </div>
       </div>
