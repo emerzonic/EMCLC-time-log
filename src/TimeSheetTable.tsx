@@ -69,7 +69,7 @@ export function TimeSheetTable(props: TimeSheetTableProps) {
   }
 
   return (
-    <table className="table table-hover table-sm table-light text-left">
+    <table className="table table-hover table-sm table-light text-left d-print-none">
       <thead>
         <tr className="bg-dark text-light">
           <th scope="col">#</th>

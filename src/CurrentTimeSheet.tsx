@@ -37,7 +37,7 @@ export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
 
   return (
     <div className="fade-in">
-      <h1 className="pt-4">{timeSheet?.date || getTodayDate()}</h1>
+      <h1 className="pt-4 d-print-none">{timeSheet?.date || getTodayDate()}</h1>
       <DigitalClock />
       <TimeSheetTable timeSheet={timeSheet as TimeSheet} setSignal={setSignal} sort={sort} />
       <TimeSheetsHistory />

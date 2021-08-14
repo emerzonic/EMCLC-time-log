@@ -9,6 +9,8 @@ export function TimeSheetsHistory(props: any) {
     return timeSheets;
   });
 
+  const [printing, setPrinting] = useState<boolean>(false);
+
   const generateDownloadData = (timeSheets: TimeSheetRecord[] = []) => {
     return timeSheets.map((record, i) => ({
       '#': i + 1,
@@ -29,6 +31,9 @@ export function TimeSheetsHistory(props: any) {
           <p className="mb-2 mt-3">
             <button className="btn  btn-sm btn-primary text-left mr-2 width-10" type="button" data-toggle="collapse" data-target={`#${timeSheet.id}`} aria-expanded="false" aria-controls={`#${timeSheet.id}`}>
               <i className="fa fa-calendar-o" aria-hidden="true"></i> {timeSheet.date}
+            </button>
+            <button className="btn btn-sm btn-success text-left mr-2 d-print-none" type="button" data-toggle="collapse" data-target={`#${timeSheet.id}`} aria-expanded="false" aria-controls={`#${timeSheet.id}`}>
+              <i className="fa fa-print" aria-hidden="true"></i> Print
             </button>
             <CsvDownload data={generateDownloadData(timeSheet.timeSheetRecords)} title={`Time Sheet ${timeSheet.date}`} />
           </p>

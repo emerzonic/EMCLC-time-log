@@ -22,8 +22,8 @@ export function ManageStudents(props: ManageStudentsProps) {
 
   return (
     <>
-      <h2 className="text-left">Manage Students</h2>
-      <table className="table table-hover table-sm table-light text-left fade-in">
+      <h2 className="text-left d-print-none">Manage Students</h2>
+      <table className="table table-hover table-sm table-light text-left fade-in d-print-none">
         <thead>
           <tr className="bg-dark text-light">
             <th scope="col">#</th>

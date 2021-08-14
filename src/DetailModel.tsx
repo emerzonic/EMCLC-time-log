@@ -68,7 +68,8 @@ export function DetailModal(props: DetailProps) {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-dismiss="modal">{<i className="fa fa-times" aria-hidden="true"></i>} Close</button>
+              <button type="button" className="btn btn-success d-print-none" data-dismiss="modal">{<i className="fa fa-print" aria-hidden="true"></i>} Print</button>
+              <button type="button" className="btn btn-secondary d-print-none" data-dismiss="modal">{<i className="fa fa-times" aria-hidden="true"></i>} Close</button>
             </div>
           </div>
         </div>
