@@ -92,16 +92,16 @@ export function SignInModal(props: SignInModalProps) {
     setSettings({ ...settings, disabled: true } as Settings);
   };
 
-  const message = payload?.action === Action.CANCEL ? 'Please Confirm!' : `Select your name from below and confirm ${payload?.action}.`;
+  const message = payload?.action === Action.CANCEL ? 'Please Confirm you want to cancel last action!' : `Select your name from below and confirm ${payload?.action}.`;
 
   const alert = (
-    <div className="font-weight-bold text-success modal-title fade-in">
+    <div className="text-success modal-title fade-in">
       {`${payload?.action} succcessfully completed!`}
     </div>
   );
 
   const initialInfo = (
-    <div className="font-weight-bold modal-title">
+    <div className="modal-title">
       {message}
     </div>
   );
@@ -111,12 +111,15 @@ export function SignInModal(props: SignInModalProps) {
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            {disabled ? alert : initialInfo}
+            <div className="font-weight-bold modal-title">
+              {payload?.action}
+            </div>
             <button onClick={resetSettings} type="button" className="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div className="modal-body text-left">
+            {disabled ? alert : initialInfo}
             {payload?.action !== Action.CANCEL && parents?.map((parent, i) => (
               <div key={i} className="form-check">
                 <input onChange={() => handleOnChange(i)} className="form-check-input" type="radio" name="exampleRadios" id={`${i}`} value={parent} checked={checks?.[i]} />

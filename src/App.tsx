@@ -35,20 +35,20 @@ function App() {
     <div className="App">
       <NavBar />
       <header className="App-header d-print-none">
-      <div className="py-5">
+        <div className="py-5">
           <h1 className="pt-4 d-print-none">{getTodayDate()}</h1>
           <DigitalClock />
-        </div>
-        <div className="btn-group pb-4" role="group" aria-label="Basic example">
-          <button onClick={() => updateView(View.TIME_SHEET)} type="button" className="btn btn-primary btn-lg mx-2">{<i className="fa fa-calendar" aria-hidden="true"></i>} Time Sheet</button>
-          <button onClick={() => updateView(View.MANAGE_STUDENTS)} type="button" className="btn btn-primary btn-lg mx-2">{<i className="fa fa-pencil-square-o" aria-hidden="true"></i>} Manage Students</button>
-          <button onClick={() => updateView(View.REPORTS)} type="button" className="btn btn-primary btn-lg mx-2">{<i className="fa fa-calendar" aria-hidden="true"></i>} Report</button>
         </div>
       </header>
       <div className="container-fluid my-5 px-4">
         {isTimeSheetView && <CurrentTimeSheet signal={singnal} setSignal={setSignal} />}
         {isManageStudentsView && <ManageStudents setSignal={setSignal} signal={singnal} />}
-        {isReportView && <TimeSheetsReports/>}
+        {isReportView && <TimeSheetsReports />}
+      </div>
+      <div className="btn-group pb-4 d-print-none" role="group" aria-label="Basic example">
+        <button onClick={() => updateView(View.TIME_SHEET)} type="button" className="btn btn-primary btn-lg mx-2">{<i className="fa fa-calendar" aria-hidden="true"></i>} Time Sheet</button>
+        <button onClick={() => updateView(View.MANAGE_STUDENTS)} type="button" className="btn btn-primary btn-lg mx-2">{<i className="fa fa-pencil-square-o" aria-hidden="true"></i>} Manage Students</button>
+        <button onClick={() => updateView(View.REPORTS)} type="button" className="btn btn-primary btn-lg mx-2">{<i className="fa fa-calendar" aria-hidden="true"></i>} Report</button>
       </div>
       <AddStudentModal setView={updateView} signal={singnal} setSignal={setSignal} />
       <AddTimeLogModal setSignal={setSignal} setView={updateView} singnal={singnal} />

@@ -45,7 +45,7 @@ function sortAsending(a: string, b: string) {
   return 0;
 }
 
-function sortDesending(a: string, b: string) {
+export function sortDesending(a: string, b: string) {
   if (a < b) {
     return -1;
   }

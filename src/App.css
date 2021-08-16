@@ -69,3 +69,8 @@
 .width-15 { 
   width: 15%;
 }
+
+.scroll_content {
+  height: 40rem;
+  overflow: scroll;
+}

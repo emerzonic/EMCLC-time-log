@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TimeSheetRecord, StorageKeys, TimeSheet, Student } from './types';
 import { getItem } from './appStorageManager';
 import { CsvDownload } from './CsvDownload';
+import { sortDesending } from './utilities';
 
 enum ReportView {
   ALL_TIME_SHEETS = 'allTimeSheets',
@@ -52,7 +53,7 @@ export function TimeSheetsReports(props: any) {
 
   return (
     <div>
-      <button onClick={toggleView} className="btn btn-md btn-secondary d-block d-print-none width-15 mb-2 w-25 fade-in" type="button">
+      <button onClick={toggleView} className="btn btn-md btn-secondary d-block d-print-none mb-2 fade-in" type="button">
         {reportView === ReportView.ALL_TIME_SHEETS ? 'View Students Report' : 'View Time Sheets Report'}
       </button>
       {reportView === ReportView.STUDENT_TIME_SHEET ?
@@ -117,21 +118,21 @@ function TimeSheetReport(props: TimeSheetReportProps) {
 
   return (
     <div className="fade-in">
-    <div className="d-flex justify-content-between">
-      <h3 className="text-left h3">Time Sheet Reports</h3>
-      <button onClick={props.print} className="btn btn-sm btn-success d-block d-print-none" type="button">
-        <i className="fa fa-print" aria-hidden="true"></i> Print All Time Sheets
-      </button>
+      <div className="d-flex justify-content-between">
+        <h3 className="text-left h3">Time Sheet Reports</h3>
+        {props.timeSheets.length > 0 && <button onClick={props.print} className="btn btn-sm btn-success d-block d-print-none" type="button">
+          <i className="fa fa-print" aria-hidden="true"></i> Print All Time Sheets
+        </button>}
       </div>
       {props.timeSheets.length ? props.timeSheets.map((timeSheet, index) => (
         <div className="text-left d-print-none" key={index} >
           <p className="mb-2 mt-3">
-            <button className="btn  btn-sm btn-primary text-left mr-2 width-15" type="button" data-toggle="collapse" data-target={`#${timeSheet.id}`} aria-expanded="false" aria-controls={`#${timeSheet.id}`}>
-              <i className="fa fa-calendar-o" aria-hidden="true"></i> {timeSheet.date}
+            <button className="btn  btn-sm btn-outline-primary text-left mr-2 width-15" type="button" data-toggle="collapse" data-target={`#${timeSheet.id}`} aria-expanded="false" aria-controls={`#${timeSheet.id}`}>
+              {timeSheet.date}  <i className="fa fa-caret-down" aria-hidden="true"></i>
             </button>
             <CsvDownload data={generateDownloadData(timeSheet.timeSheetRecords)} title={`Time Sheet ${timeSheet.date}`} />
           </p>
-          <div className="collapse" id={`${timeSheet.id}`}>
+          <div className={index === 0 ? "collapse show" : "collapse"} id={`${timeSheet.id}`}>
             <TimeSheetReportCard records={timeSheet.timeSheetRecords} />
           </div>
         </div>)) : <p className='text-left'>Not time sheet report is available.</p>
@@ -152,7 +153,12 @@ interface StudentReportProps {
 }
 
 function StudentReport(props: StudentReportProps) {
-  const [detail, setDetail] = useState<StudentDetail>(() => props.studentReports[0]);
+  const sortedReports = props.studentReports.sort((a, b) => {
+    const aValue = a.student.firstName.toLowerCase();
+    const bValue = b.student.firstName.toLowerCase();
+    return sortDesending(aValue, bValue);
+  })
+  const [detail, setDetail] = useState<StudentDetail>(sortedReports[0]);
 
   const handleChange = (id: number) => {
     const nextDetail = props.studentReports.find(r => r.student.id === id);
@@ -167,20 +173,20 @@ function StudentReport(props: StudentReportProps) {
       <div className="d-flex justify-content-end fade-in d-print-none">
         <div className="w-25">
           <h3 className="text-left h3 border-bottom">Students</h3>
-          <ul className="list-group text-left">
-            {props.studentReports.map(({ student }, i) => (
-              <li onClick={() => handleChange(student.id as number)} key={student.id} className={`${student.id === detail.student.id ? ActiveListClass : listClass}`}>{student.firstName} {student.lastName}</li>
-            ))}
+          <ul className="list-group text-left scroll_content">
+            {sortedReports.length ? sortedReports.map(({ student }, i) => (
+              <li onClick={() => handleChange(student.id as number)} key={student.id} className={`${student.id === detail?.student.id ? ActiveListClass : listClass}`}>{student.firstName} {student.lastName}</li>
+            )) : "No student exist."}
           </ul>
         </div>
         <div className="col">
           <div className="card w-100">
             <div className="card-body text-left">
               <div className="d-flex justify-content-between">
-                <h5 className="card-title">{detail.student.firstName} {detail.student.lastName}</h5>
-                <button onClick={props.print} className="btn btn-sm btn-success text-left d-block d-print-none mb-2" type="button">
+                <h5 className="card-title">{detail?.student.firstName} {detail?.student.lastName}</h5>
+                {props.studentReports.length > 0 && <button onClick={props.print} className="btn btn-sm btn-success text-left d-block d-print-none mb-2" type="button">
                   <i className="fa fa-print" aria-hidden="true"></i> Print
-                </button>
+                </button>}
               </div>
               <table className="table table-hover table-sm table-light text-left">
                 <thead>
@@ -194,7 +200,7 @@ function StudentReport(props: StudentReportProps) {
                   </tr>
                 </thead>
                 <tbody>
-                  {detail.timeSheets.map((timeSheet: TimeSheetReportRecord, i: number) => (
+                  {detail?.timeSheets.map((timeSheet: TimeSheetReportRecord, i: number) => (
                     <tr key={i}>
                       <td>{i + 1}.</td>
                       <td>{timeSheet.date || '-'}</td>
@@ -212,7 +218,7 @@ function StudentReport(props: StudentReportProps) {
       </div>
       <div className="card d-none d-print-block">
         <div className="card-body text-left">
-          <h5 className="card-title">{detail.student.firstName} {detail.student.lastName}</h5>
+          <h5 className="card-title">{detail?.student.firstName} {detail?.student.lastName}</h5>
           <table className="table table-sm text-left">
             <thead>
               <tr className="bg-dark text-light">
@@ -225,7 +231,7 @@ function StudentReport(props: StudentReportProps) {
               </tr>
             </thead>
             <tbody>
-              {detail.timeSheets.map((timeSheet: TimeSheetReportRecord, i: number) => (
+              {detail?.timeSheets.map((timeSheet: TimeSheetReportRecord, i: number) => (
                 <tr key={i}>
                   <td>{i + 1}.</td>
                   <td>{timeSheet.date || '-'}</td>

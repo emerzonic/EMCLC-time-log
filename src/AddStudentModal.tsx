@@ -9,7 +9,6 @@ interface AddStudentModalProps {
   setSignal: (e: any) => void;
 }
 export function AddStudentModal(props: AddStudentModalProps) {
-  //seed();
   const defaultStudent = {
     id: null,
     firstName: '',
@@ -29,7 +28,7 @@ export function AddStudentModal(props: AddStudentModalProps) {
 
   useEffect(() => {
     const payload = getItem<DetailActionPayload>(StorageKeys.DETAIL_ACTION);
-    if (payload?.action === DetailAction.EDIT || payload?.action === DetailAction.VIEW) {
+    if (payload?.action === DetailAction.EDIT) {
       const list = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
       const editStudent = list.find(student => student.id === payload.id);
       if (editStudent) {
@@ -38,10 +37,6 @@ export function AddStudentModal(props: AddStudentModalProps) {
         setParentTwo(editStudent.parents.parentTwo || '');
         setParentThree(editStudent.parents.parentThree || '');
         setParentCount(Object.values(editStudent.parents).filter(v => v).length);
-
-        if (payload?.action === DetailAction.VIEW) {
-          setShowConfirmation(true);
-        }
       }
     }
   }, [props.signal])
@@ -124,8 +119,6 @@ export function AddStudentModal(props: AddStudentModalProps) {
     removeItem(StorageKeys.DETAIL_ACTION);
   }
 
-  const removeStudentInfo = (list: any, parents:any) => console.log("delete");
-
   const submitInfo = (e: any) => {
     const list = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
     const parents: Parents = { parentOne, parentTwo, parentThree };
@@ -133,9 +126,7 @@ export function AddStudentModal(props: AddStudentModalProps) {
 
     if (payload?.action === DetailAction.EDIT) {
       editStudentInfo(list, parents);
-    } else if(payload?.action === DetailAction.DELETE){
-      removeStudentInfo(list, parents);
-    }else {
+    } else {
       addNewStudentInfo(list, parents);
     }
 
@@ -205,7 +196,7 @@ export function AddStudentModal(props: AddStudentModalProps) {
             <button onClick={updateForm} type="button" className={count === 3 ? "btn btn-primary btn-sm d-none" : "btn btn-primary btn-sm"}>{<i className="fa fa-plus" aria-hidden="true"></i>} Add another parent or guardian</button>
           </div>}
           <div className="modal-footer">
-            {showConfirmation && <button onClick={handleEdit} type="button" className="btn btn-warning">Edit</button>}
+            {showConfirmation && <button onClick={handleEdit} type="button" className="btn btn-warning">{<i className="fa fa-edit" aria-hidden="true"></i>} Edit</button>}
             <button onClick={resetForm} type="button" className="btn btn-secondary" data-dismiss="modal">{<i className="fa fa-times" aria-hidden="true"></i>} Cancel</button>
             <button onClick={showConfirmation ? submitInfo : confirmInfo} data-dismiss={showConfirmation ? "modal" : ""} type="button" className="btn btn-primary"> {<i className="fa fa-save" aria-hidden="true"></i>} Submit</button>
           </div>
@@ -214,47 +205,3 @@ export function AddStudentModal(props: AddStudentModalProps) {
     </div>
   );
 }
-
-
-// function seed() {
-//   const names = [
-//     'Nerissa Sward',
-//     'Chelsea Galaviz',
-//     'Rema Prochaska',
-//     'Dustin Spurrier',
-//     'Rosalva Merideth',
-//     'Daniella Pleiman',
-//     'Marlys Melvin',
-//     'Sherice Orner',
-//     'Odelia Madere',
-//     'Keisha Mckinsey',
-//     'Gary Vereen',
-//     'Terrilyn Joynes',
-//     'Solomon Flanders',
-//     'Dedra Beech',
-//     'Ken Demont',
-//     'Loan Felder',
-//     'Elba Isherwood',
-//     'Fidelia Felan',
-//     'Malik Kirshner',
-//     'Ashleigh Veit',
-//   ];
-//   var s: Student[] = [];
-//   names.forEach((name, i) => {
-//     var [f, l] = name.split(" ");
-//     s.push({
-//       id: i + 1,
-//       firstName: f,
-//       lastName: l,
-//       parents: {
-//         parentOne: names[Math.floor(Math.random() * names.length)],
-//         parentTwo: names[Math.floor(Math.random() * names.length)],
-//         parentThree: names[Math.floor(Math.random() * names.length)],
-//       }
-//     });
-//   });
-
-//   if (!getItem(StorageKeys.STUDENT_LIST)) {
-//     setItem(StorageKeys.STUDENT_LIST, s);
-//   }
-// }

@@ -23,7 +23,7 @@ export enum ORDER {
 }
 
 export interface SortSetting {
-  field: Field,
+  field: Field | string,
   order: ORDER,
   type: TypeOfTag
 }
@@ -79,7 +79,7 @@ export function TimeSheetTable(props: TimeSheetTableProps) {
           <th scope="col">Sign In By</th>
           <th className="table_sort" onClick={() => sort(Field.SIGN_OUT)} scope="col">Time Out {getSortIcon(Field.SIGN_OUT)}</th>
           <th scope="col">Sign Out By</th>
-          <th className="text-center" scope="col">Action</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>

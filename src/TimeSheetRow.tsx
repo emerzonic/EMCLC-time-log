@@ -21,7 +21,7 @@ export function TimeLogRow({ row, number, setPayload: setAction }: TimeLogRowPro
       <td>{row.signInParent}</td>
       <td>{row.signOutTime}</td>
       <td>{row.signOutParent}</td>
-      <td className="text-center">
+      <td className="text-right">
         <button onClick={(e: any) => setAction(e, { id: row.id, action: Action.SIGN_IN })} data-toggle="modal" data-target={!row.signInTime && "#SignInModal"} type="button" className={signInButtonClass}>{<i className="fa fa-sign-in"></i>} {Action.SIGN_IN}</button>
         <button onClick={(e: any) => setAction(e, { id: row.id, action: Action.SIGN_OUT })} data-toggle="modal" data-target={row.signInTime && "#SignInModal"} type="button" className={signOutButtonClass}>{<i className="fa fa-sign-out"></i>} {Action.SIGN_OUT}</button>
         <button onClick={(e: any) => setAction(e, { id: row.id, action: Action.CANCEL })} data-toggle="modal" data-target={row.signInTime && "#SignInModal"} type="button" className={resetButtonClass}>{<i className="fa fa-repeat"></i>} {Action.CANCEL}</button></td>

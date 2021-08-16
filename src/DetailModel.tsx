@@ -33,14 +33,22 @@ export function DetailModal(props: DetailProps) {
     setStudentDetail(newStudentDetial);
   }, [props.signal]);
 
+  const student = studentDetail?.student;
+  const parents = student?.parents;
   return (
     <div className="modal fade detail-modal text-left" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="card w-100">
             <div className="card-body">
-              <h3 className="card-title border-bottom">{studentDetail?.student?.firstName} {studentDetail?.student?.lastName}</h3>
+              <h5 className="card-title border-bottom">Student Information</h5>
+              <p>{student?.firstName} {student?.lastName}</p>
+              <h5 className="card-title border-bottom">Parents/Guardians</h5>
+              {parents?.parentOne && <p>{parents?.parentOne}</p>}
+              {parents?.parentOne && <p>{parents?.parentTwo}</p>}
+              {parents?.parentOne && <p>{parents?.parentThree}</p>}
               <div>
+                <h5 className="card-title border-bottom">Student Time Sheets</h5>
                 <table className="table table-hover table-sm table-light text-left">
                   <thead>
                     <tr className="bg-dark text-light">

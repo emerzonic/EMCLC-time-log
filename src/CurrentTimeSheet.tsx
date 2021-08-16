@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TimeSheetRecord, StorageKeys, TimeSheet } from './types';
 import { getTodayDate } from "./dateUtil";
-import { DigitalClock } from "./DigitalClock";
 import { SignInModal } from "./SignInModal";
 import { SortSetting, TimeSheetTable } from './TimeSheetTable';
 import { getItem } from './appStorageManager';
