@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/emerzonic/EMCLC-time-log/static/css/main.ac348bf0.chunk.css",
-    "main.js": "/emerzonic/EMCLC-time-log/static/js/main.fa3b5db6.chunk.js",
-    "main.js.map": "/emerzonic/EMCLC-time-log/static/js/main.fa3b5db6.chunk.js.map",
+    "main.js": "/emerzonic/EMCLC-time-log/static/js/main.01be9b78.chunk.js",
+    "main.js.map": "/emerzonic/EMCLC-time-log/static/js/main.01be9b78.chunk.js.map",
     "runtime-main.js": "/emerzonic/EMCLC-time-log/static/js/runtime-main.168bfd28.js",
     "runtime-main.js.map": "/emerzonic/EMCLC-time-log/static/js/runtime-main.168bfd28.js.map",
     "static/js/2.4509d885.chunk.js": "/emerzonic/EMCLC-time-log/static/js/2.4509d885.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.168bfd28.js",
     "static/js/2.4509d885.chunk.js",
     "static/css/main.ac348bf0.chunk.css",
-    "static/js/main.fa3b5db6.chunk.js"
+    "static/js/main.01be9b78.chunk.js"
   ]
 }
