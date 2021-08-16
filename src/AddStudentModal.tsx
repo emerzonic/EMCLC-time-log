@@ -74,7 +74,12 @@ export function AddStudentModal(props: AddStudentModalProps) {
   };
 
   const addNewStudentInfo = (list: Student[], parents: Parents) => {
-    const newStudent = { ...student, id: Date.now(), parents };
+    const newStudent = {
+      id: Date.now(),
+      firstName: student.firstName.trim(),
+      lastName: student.lastName.trim(),
+      parents
+    };
     const updatedList = [...list, newStudent];
     setItem(StorageKeys.STUDENT_LIST, updatedList);
 
@@ -121,7 +126,12 @@ export function AddStudentModal(props: AddStudentModalProps) {
 
   const submitInfo = (e: any) => {
     const list = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
-    const parents: Parents = { parentOne, parentTwo, parentThree };
+    const parents: Parents = {
+      parentOne: parentOne.trim(),
+      parentTwo: parentTwo.trim(),
+      parentThree: parentThree.trim(),
+    };
+
     const payload = getItem<DetailActionPayload>(StorageKeys.DETAIL_ACTION);
 
     if (payload?.action === DetailAction.EDIT) {
