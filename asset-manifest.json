@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/emerzonic/EMCLC-time-log/static/css/main.ac348bf0.chunk.css",
-    "main.js": "/emerzonic/EMCLC-time-log/static/js/main.01be9b78.chunk.js",
-    "main.js.map": "/emerzonic/EMCLC-time-log/static/js/main.01be9b78.chunk.js.map",
-    "runtime-main.js": "/emerzonic/EMCLC-time-log/static/js/runtime-main.168bfd28.js",
-    "runtime-main.js.map": "/emerzonic/EMCLC-time-log/static/js/runtime-main.168bfd28.js.map",
-    "static/js/2.4509d885.chunk.js": "/emerzonic/EMCLC-time-log/static/js/2.4509d885.chunk.js",
-    "static/js/2.4509d885.chunk.js.map": "/emerzonic/EMCLC-time-log/static/js/2.4509d885.chunk.js.map",
-    "static/js/3.1b5adc66.chunk.js": "/emerzonic/EMCLC-time-log/static/js/3.1b5adc66.chunk.js",
-    "static/js/3.1b5adc66.chunk.js.map": "/emerzonic/EMCLC-time-log/static/js/3.1b5adc66.chunk.js.map",
-    "index.html": "/emerzonic/EMCLC-time-log/index.html",
-    "static/css/main.ac348bf0.chunk.css.map": "/emerzonic/EMCLC-time-log/static/css/main.ac348bf0.chunk.css.map",
-    "static/js/2.4509d885.chunk.js.LICENSE.txt": "/emerzonic/EMCLC-time-log/static/js/2.4509d885.chunk.js.LICENSE.txt"
+    "main.css": "/time-tracking/static/css/main.ac348bf0.chunk.css",
+    "main.js": "/time-tracking/static/js/main.01be9b78.chunk.js",
+    "main.js.map": "/time-tracking/static/js/main.01be9b78.chunk.js.map",
+    "runtime-main.js": "/time-tracking/static/js/runtime-main.f9a2fef7.js",
+    "runtime-main.js.map": "/time-tracking/static/js/runtime-main.f9a2fef7.js.map",
+    "static/js/2.4509d885.chunk.js": "/time-tracking/static/js/2.4509d885.chunk.js",
+    "static/js/2.4509d885.chunk.js.map": "/time-tracking/static/js/2.4509d885.chunk.js.map",
+    "static/js/3.1b5adc66.chunk.js": "/time-tracking/static/js/3.1b5adc66.chunk.js",
+    "static/js/3.1b5adc66.chunk.js.map": "/time-tracking/static/js/3.1b5adc66.chunk.js.map",
+    "index.html": "/time-tracking/index.html",
+    "static/css/main.ac348bf0.chunk.css.map": "/time-tracking/static/css/main.ac348bf0.chunk.css.map",
+    "static/js/2.4509d885.chunk.js.LICENSE.txt": "/time-tracking/static/js/2.4509d885.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.168bfd28.js",
+    "static/js/runtime-main.f9a2fef7.js",
     "static/js/2.4509d885.chunk.js",
     "static/css/main.ac348bf0.chunk.css",
     "static/js/main.01be9b78.chunk.js"
