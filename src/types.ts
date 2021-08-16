@@ -37,6 +37,7 @@ export interface DetailActionPayload {
 export enum View {
   TIME_SHEET = 'time sheet',
   MANAGE_STUDENTS = 'manage students',
+  REPORTS = 'reports',
 }
 
 export interface UpdateActionPayload {

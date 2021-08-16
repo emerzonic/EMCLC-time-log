@@ -29,7 +29,7 @@ export function AddStudentModal(props: AddStudentModalProps) {
 
   useEffect(() => {
     const payload = getItem<DetailActionPayload>(StorageKeys.DETAIL_ACTION);
-    if (payload?.action === DetailAction.EDIT) {
+    if (payload?.action === DetailAction.EDIT || payload?.action === DetailAction.VIEW) {
       const list = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
       const editStudent = list.find(student => student.id === payload.id);
       if (editStudent) {
@@ -38,6 +38,10 @@ export function AddStudentModal(props: AddStudentModalProps) {
         setParentTwo(editStudent.parents.parentTwo || '');
         setParentThree(editStudent.parents.parentThree || '');
         setParentCount(Object.values(editStudent.parents).filter(v => v).length);
+
+        if (payload?.action === DetailAction.VIEW) {
+          setShowConfirmation(true);
+        }
       }
     }
   }, [props.signal])
@@ -120,6 +124,8 @@ export function AddStudentModal(props: AddStudentModalProps) {
     removeItem(StorageKeys.DETAIL_ACTION);
   }
 
+  const removeStudentInfo = (list: any, parents:any) => console.log("delete");
+
   const submitInfo = (e: any) => {
     const list = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
     const parents: Parents = { parentOne, parentTwo, parentThree };
@@ -127,7 +133,9 @@ export function AddStudentModal(props: AddStudentModalProps) {
 
     if (payload?.action === DetailAction.EDIT) {
       editStudentInfo(list, parents);
-    } else {
+    } else if(payload?.action === DetailAction.DELETE){
+      removeStudentInfo(list, parents);
+    }else {
       addNewStudentInfo(list, parents);
     }
 

@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #343a40;
   min-height: 20vh;
   display: flex;
   flex-direction: column;
@@ -54,14 +54,11 @@
 	}
 }
 
-hr {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border: 0;
-  border-top: 4px solid rgba(0, 0, 0, 0.1);
+.table_sort { 
+  cursor: pointer; 
 }
 
-.table_sort { 
+.pointer { 
   cursor: pointer; 
 }
 
@@ -69,6 +66,6 @@ hr {
   visibility: hidden;
 }
 
-.width-10 { 
-  width: 13%;
+.width-15 { 
+  width: 15%;
 }

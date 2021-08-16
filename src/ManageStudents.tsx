@@ -21,8 +21,11 @@ export function ManageStudents(props: ManageStudentsProps) {
   }
 
   return (
-    <>
-      <h2 className="text-left d-print-none">Manage Students</h2>
+    <div className="fade-in">
+      <div className="d-flex justify-content-between">
+        <h2 className="text-left d-print-none">Manage Students</h2>
+        <button type="button" className="btn btn-primary mb-2" data-toggle="modal" data-target="#addStudentModal">{<i className="fa fa-user" aria-hidden="true"></i>} Add New Student</button>
+      </div>
       <table className="table table-hover table-sm table-light text-left fade-in d-print-none">
         <thead>
           <tr className="bg-dark text-light">
@@ -46,7 +49,8 @@ export function ManageStudents(props: ManageStudentsProps) {
               <td>{s.parents.parentThree}</td>
               <td className="text-center">
                 <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.EDIT })} data-toggle="modal" data-target="#addStudentModal" type="button" className="btn btn-warning btn-sm mr-2 font-weight-bold">{<i className="fa fa-edit" aria-hidden="true"></i>} Edit</button>
-                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.VIEW })} data-toggle="modal" data-target=".detail-modal" type="button" className="btn btn-primary btn-sm mr-2 font-weight-bold">{<i className="fa fa-calendar" aria-hidden="true"></i>} Time Sheets</button>
+                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.VIEW })} data-toggle="modal" data-target="#addStudentModal" type="button" className="btn btn-secondary btn-sm mr-2 font-weight-bold">{<i className="fa fa-user" aria-hidden="true"></i>} Details</button>
+                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.DELETE })} data-toggle="modal" data-target="#addStudentModal" type="button" className="btn btn-danger btn-sm mr-2 font-weight-bold">{<i className="fa fa-trash-o" aria-hidden="true"></i>} Delete</button>
               </td>
             </tr>) :
             (<tr>
@@ -55,6 +59,6 @@ export function ManageStudents(props: ManageStudentsProps) {
         </tbody>
       </table>
       <DetailModal signal={props.signal} setSignal={props.setSignal} />
-    </>
+    </div>
   );
 }
