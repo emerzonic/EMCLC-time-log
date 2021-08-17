@@ -40,7 +40,7 @@ function App() {
           <DigitalClock />
         </div>
       </header>
-      <div className="container-fluid my-5 px-4">
+      <div className="my-5 mx-auto col-lg-10 col-md-10">
         {isTimeSheetView && <CurrentTimeSheet signal={singnal} setSignal={setSignal} />}
         {isManageStudentsView && <ManageStudents setSignal={setSignal} signal={singnal} />}
         {isReportView && <TimeSheetsReports />}
