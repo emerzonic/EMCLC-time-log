@@ -7,8 +7,8 @@ interface DownloadProps {
 }
 export function CsvDownload(props: DownloadProps) {
   return (
-    <CSVLink data={props.data} filename={`${props.title}`}>
+    <CSVLink data={props.data} filename={`${props.title}.csv`}>
       <button className="btn  btn-sm btn-dark"><i className="fa fa-download" aria-hidden="true"></i> Download</button>
     </CSVLink>
-    );
+  );
 }
