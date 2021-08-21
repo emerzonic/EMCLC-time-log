@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/time-tracking/static/css/main.ac348bf0.chunk.css",
-    "main.js": "/time-tracking/static/js/main.97d01a25.chunk.js",
-    "main.js.map": "/time-tracking/static/js/main.97d01a25.chunk.js.map",
+    "main.css": "/time-tracking/static/css/main.102ee87b.chunk.css",
+    "main.js": "/time-tracking/static/js/main.30e23ceb.chunk.js",
+    "main.js.map": "/time-tracking/static/js/main.30e23ceb.chunk.js.map",
     "runtime-main.js": "/time-tracking/static/js/runtime-main.f9a2fef7.js",
     "runtime-main.js.map": "/time-tracking/static/js/runtime-main.f9a2fef7.js.map",
     "static/js/2.4509d885.chunk.js": "/time-tracking/static/js/2.4509d885.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.1b5adc66.chunk.js": "/time-tracking/static/js/3.1b5adc66.chunk.js",
     "static/js/3.1b5adc66.chunk.js.map": "/time-tracking/static/js/3.1b5adc66.chunk.js.map",
     "index.html": "/time-tracking/index.html",
-    "static/css/main.ac348bf0.chunk.css.map": "/time-tracking/static/css/main.ac348bf0.chunk.css.map",
+    "static/css/main.102ee87b.chunk.css.map": "/time-tracking/static/css/main.102ee87b.chunk.css.map",
     "static/js/2.4509d885.chunk.js.LICENSE.txt": "/time-tracking/static/js/2.4509d885.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f9a2fef7.js",
     "static/js/2.4509d885.chunk.js",
-    "static/css/main.ac348bf0.chunk.css",
-    "static/js/main.97d01a25.chunk.js"
+    "static/css/main.102ee87b.chunk.css",
+    "static/js/main.30e23ceb.chunk.js"
   ]
 }
