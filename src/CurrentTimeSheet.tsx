@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { TimeSheetRecord, StorageKeys, TimeSheet } from './types';
+import { TimeSheetRecord, StorageKeys, TimeSheet, Student } from './types';
 import { getTodayDate } from "./dateUtil";
 import { SignInModal } from "./SignInModal";
 import { SortSetting, TimeSheetTable } from './TimeSheetTable';
-import { getItem } from './appStorageManager';
+import { getItem, setItem } from './appStorageManager';
 import { SortValues } from './utilities';
 
 export interface CurrentTimeSheetProps {
@@ -16,7 +16,25 @@ export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
   function update() {
     const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
     const todayTimeSheet = timeSheets.find((timeSheet: TimeSheet) => timeSheet.date === getTodayDate());
-    return todayTimeSheet;
+
+    if (todayTimeSheet) {
+      return todayTimeSheet;
+    }
+
+    const studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
+
+    if (studentList.length) {
+      const records: TimeSheetRecord[] = studentList.map(({ id, firstName, lastName }) => ({ id, firstName, lastName }) as TimeSheetRecord)
+      const newTimeSheet: TimeSheet = { id: Date.now(), date: getTodayDate(), timeSheetRecords: records };
+  
+      if (timeSheets.length === 10) {
+        timeSheets.shift();
+      }
+  
+      const updatedTimeSheets = [...timeSheets, newTimeSheet];
+      setItem(StorageKeys.TIME_SHEETS, updatedTimeSheets);
+      return newTimeSheet;
+    }
   }
 
   const sort = (sortSetting: SortSetting) => {
@@ -26,7 +44,6 @@ export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
     }
     setTimeSheet(timeSheet);
   }
-
 
   useEffect(() => {
     const timeSheet = update();
