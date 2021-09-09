@@ -55,6 +55,7 @@ export interface Student {
   id: number | null;
   firstName: string;
   lastName: string;
+  isActive: boolean;
   parents: Parents;
 }
 

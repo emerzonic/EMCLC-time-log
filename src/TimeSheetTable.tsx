@@ -86,7 +86,7 @@ export function TimeSheetTable(props: TimeSheetTableProps) {
         {props.timeSheet ? props.timeSheet.timeSheetRecords?.map((student: TimeSheetRecord, i: number) => (
           <TimeLogRow key={i} number={i + 1} setPayload={setPayload} row={student} />)) :
           <tr className="text-left">
-            <td colSpan={7}>No time sheet has been created for today.</td>
+            <td colSpan={7}>No time sheet has been created for today. Check that you have at least on active student.</td>
           </tr>}
       </tbody>
     </table>

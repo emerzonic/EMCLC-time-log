@@ -14,6 +14,7 @@ export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
   const [timeSheet, setTimeSheet] = useState<TimeSheet | undefined>(update());
   const [signal, setSignal] = useState(null);
   function update() {
+
     const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
     const todayTimeSheet = timeSheets.find((timeSheet: TimeSheet) => timeSheet.date === getTodayDate());
 
@@ -21,19 +22,34 @@ export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
       return todayTimeSheet;
     }
 
-    const studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
+    let studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
+
+    if (studentList.some(s => s.isActive === undefined)) {
+      studentList.forEach(s => s.isActive = true);
+      setItem(StorageKeys.STUDENT_LIST, studentList);
+      studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? []
+    }
 
     if (studentList.length) {
-      const records: TimeSheetRecord[] = studentList.map(({ id, firstName, lastName }) => ({ id, firstName, lastName }) as TimeSheetRecord)
-      const newTimeSheet: TimeSheet = { id: Date.now(), date: getTodayDate(), timeSheetRecords: records };
-  
-      if (timeSheets.length === 10) {
-        timeSheets.shift();
+      const records: TimeSheetRecord[] = studentList
+        .filter(s => s.isActive)
+        .map(({ id, firstName, lastName }) => ({ id, firstName, lastName }) as TimeSheetRecord);
+
+      if (records.length) {
+        const newTimeSheet: TimeSheet = {
+          id: Date.now(),
+          date: getTodayDate(),
+          timeSheetRecords: records
+        };
+
+        if (timeSheets.length === 20) {
+          timeSheets.shift();
+        }
+
+        const updatedTimeSheets = [...timeSheets, newTimeSheet];
+        setItem(StorageKeys.TIME_SHEETS, updatedTimeSheets);
+        return newTimeSheet;
       }
-  
-      const updatedTimeSheets = [...timeSheets, newTimeSheet];
-      setItem(StorageKeys.TIME_SHEETS, updatedTimeSheets);
-      return newTimeSheet;
     }
   }
 

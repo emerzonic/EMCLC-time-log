@@ -129,7 +129,7 @@ export function SignInModal(props: SignInModalProps) {
           </div>
           <div className="modal-footer">
             <button onClick={resetSettings} type="button" className="btn btn-secondary" data-dismiss="modal">{<i className="fa fa-times" aria-hidden="true"></i>} {disabled ? 'Close' : 'Cancel'}</button>
-            <button onClick={handleSave} type="button" className="btn btn-primary" disabled={disabled}>{confirmButtonText}</button>
+            <button onClick={handleSave} type="button" className="btn btn-primary" data-dismiss="modal">{confirmButtonText}</button>
           </div>
         </div>
       </div>

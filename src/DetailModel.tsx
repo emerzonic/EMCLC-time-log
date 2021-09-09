@@ -43,6 +43,7 @@ export function DetailModal(props: DetailProps) {
             <div className="card-body">
               <h5 className="card-title border-bottom">Student Information</h5>
               <p>{student?.firstName} {student?.lastName}</p>
+              <p>Student Status: {student?.isActive ? 'Active' : 'Not Active'}</p>
               <h5 className="card-title border-bottom">Parents/Guardians</h5>
               {parents?.parentOne && <p>{parents?.parentOne}</p>}
               {parents?.parentOne && <p>{parents?.parentTwo}</p>}

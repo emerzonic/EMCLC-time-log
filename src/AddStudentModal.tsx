@@ -13,6 +13,7 @@ export function AddStudentModal(props: AddStudentModalProps) {
     id: null,
     firstName: '',
     lastName: '',
+    isActive: true,
     parents: {
       parentOne: '',
     }
@@ -31,6 +32,7 @@ export function AddStudentModal(props: AddStudentModalProps) {
     if (payload?.action === DetailAction.EDIT) {
       const list = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
       const editStudent = list.find(student => student.id === payload.id);
+
       if (editStudent) {
         setStudent(editStudent);
         setParentOne(editStudent.parents.parentOne || '');
@@ -49,6 +51,10 @@ export function AddStudentModal(props: AddStudentModalProps) {
     if (count <= 2) {
       setParentCount(count + 1);
     }
+  };
+
+  const setActiveStatus = () => {
+    setStudent({ ...student, isActive: !student.isActive });
   };
 
   const resetForm = () => {
@@ -78,6 +84,7 @@ export function AddStudentModal(props: AddStudentModalProps) {
       id: Date.now(),
       firstName: student.firstName.trim(),
       lastName: student.lastName.trim(),
+      isActive: student.isActive,
       parents
     };
     const updatedList = [...list, newStudent];
@@ -109,15 +116,29 @@ export function AddStudentModal(props: AddStudentModalProps) {
     });
 
     setItem(StorageKeys.STUDENT_LIST, updatedList);
+
     const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
+    const { id, firstName, lastName, isActive } = student;
 
     for (const timeSheet of timeSheets) {
-      timeSheet.timeSheetRecords.forEach((record) => {
-        if (record.id === student.id) {
-          record.firstName = student.firstName;
-          record.lastName = student.lastName;
+      const index = timeSheet.timeSheetRecords.findIndex(r => r.id === id);
+      const record = timeSheet.timeSheetRecords[index];
+
+      if (record?.id === id) {
+        timeSheet.timeSheetRecords[index] = { ...record, firstName, lastName };
+      }
+
+      const isToday = timeSheet.date === getTodayDate();
+
+      if (isToday) {
+        if (!record && isActive) {
+          timeSheet.timeSheetRecords.push({ id, firstName, lastName } as TimeSheetRecord);
         }
-      });
+
+        if (record && !isActive) {
+          timeSheet.timeSheetRecords = timeSheet.timeSheetRecords.filter(r => r.id !== id);
+        }
+      }
     }
 
     setItem(StorageKeys.TIME_SHEETS, timeSheets);
@@ -150,6 +171,7 @@ export function AddStudentModal(props: AddStudentModalProps) {
         <h6 className="card-title border-bottom">Student</h6>
         <p className="card-text">First Name: {student.firstName}</p>
         <p className="card-text">Last Name: {student.lastName}</p>
+        <p className="card-text">Student Status: {student.isActive ? 'Active' : 'Not Active'}</p>
         <div className="hr" />
         <h6 className="card-text border-bottom">Parents/Guardians</h6>
         <div className="hr" />
@@ -167,6 +189,40 @@ export function AddStudentModal(props: AddStudentModalProps) {
   const add = 'Add Student Information';
   const confirm = 'Review Student Detail';
 
+  const editView = (
+    <div className="modal-body text-left">
+      <form>
+        <div className="form-group">
+          <label className="text-font-bold" >First Name</label>
+          <input type="text" onChange={(e) => onNameChange({ firstName: e.target.value })} value={student.firstName} className="form-control" aria-describedby="emailHelp" placeholder="Enter first name." />
+          {error && !student.firstName ? inValid : ''}
+        </div>
+        <div className="form-group">
+          <label className="text-font-bold" >Last Name</label>
+          <input type="text" onChange={(e) => onNameChange({ lastName: e.target.value })} value={student.lastName} className="form-control" placeholder="Enter last name." />
+          {error && !student.lastName ? inValid : ''}
+        </div>
+        <div className="form-group">
+          <button onClick={setActiveStatus} type="button" className="btn btn-primary btn-sm">{student.isActive ? 'Deactivate Student' : 'Activate Student'}</button>
+        </div>
+        <div className="form-group">
+          <label className="text-font-bold" >Parent/Guardian 1</label>
+          <input type="text" onChange={(e) => setParentOne(e.target.value)} value={parentOne} className="form-control" placeholder="Enter first parent or guadian full name." />
+          {error && !parentOne ? inValid : ''}
+        </div>
+        <div className={count > 1 ? 'form-group' : "form-group d-none"}>
+          <label className="text-font-bold" >Parent/Guardian 2</label>
+          <input type="text" onChange={(e) => setParentTwo(e.target.value)} value={parentTwo} className="form-control" placeholder="Enter second parent or guadian full name." />
+        </div>
+        <div className={count > 2 ? 'form-group' : "form-group d-none"}>
+          <label className="text-font-bold" >Parent/Guardian 3</label>
+          <input type="text" onChange={(e) => setParentThree(e.target.value)} value={parentThree} className="form-control" placeholder="Enter third parent or guadian full name." />
+        </div>
+      </form>
+      <button onClick={updateForm} type="button" className={count === 3 ? "btn btn-primary btn-sm d-none" : "btn btn-primary btn-sm"}>{<i className="fa fa-plus" aria-hidden="true"></i>} Add another parent or guardian</button>
+    </div>
+  )
+
   return (
     <div className="modal fade" id="addStudentModal" role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true">
       <div className="modal-dialog" role="document">
@@ -177,34 +233,7 @@ export function AddStudentModal(props: AddStudentModalProps) {
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          {showConfirmation ? confirmation : <div className="modal-body text-left">
-            <form>
-              <div className="form-group">
-                <label className="text-font-bold" >First Name</label>
-                <input type="text" onChange={(e) => onNameChange({ firstName: e.target.value })} value={student.firstName} className="form-control" aria-describedby="emailHelp" placeholder="Enter first name." />
-                {error && !student.firstName ? inValid : ''}
-              </div>
-              <div className="form-group">
-                <label className="text-font-bold" >Last Name</label>
-                <input type="text" onChange={(e) => onNameChange({ lastName: e.target.value })} value={student.lastName} className="form-control" placeholder="Enter last name." />
-                {error && !student.lastName ? inValid : ''}
-              </div>
-              <div className="form-group">
-                <label className="text-font-bold" >Parent/Guardian 1</label>
-                <input type="text" onChange={(e) => setParentOne(e.target.value)} value={parentOne} className="form-control" placeholder="Enter first parent or guadian full name." />
-                {error && !parentOne ? inValid : ''}
-              </div>
-              <div className={count > 1 ? 'form-group' : "form-group d-none"}>
-                <label className="text-font-bold" >Parent/Guardian 2</label>
-                <input type="text" onChange={(e) => setParentTwo(e.target.value)} value={parentTwo} className="form-control" placeholder="Enter second parent or guadian full name." />
-              </div>
-              <div className={count > 2 ? 'form-group' : "form-group d-none"}>
-                <label className="text-font-bold" >Parent/Guardian 3</label>
-                <input type="text" onChange={(e) => setParentThree(e.target.value)} value={parentThree} className="form-control" placeholder="Enter third parent or guadian full name." />
-              </div>
-            </form>
-            <button onClick={updateForm} type="button" className={count === 3 ? "btn btn-primary btn-sm d-none" : "btn btn-primary btn-sm"}>{<i className="fa fa-plus" aria-hidden="true"></i>} Add another parent or guardian</button>
-          </div>}
+          {showConfirmation ? confirmation : editView}
           <div className="modal-footer">
             {showConfirmation && <button onClick={handleEdit} type="button" className="btn btn-warning">{<i className="fa fa-edit" aria-hidden="true"></i>} Edit</button>}
             <button onClick={resetForm} type="button" className="btn btn-secondary" data-dismiss="modal">{<i className="fa fa-times" aria-hidden="true"></i>} Cancel</button>

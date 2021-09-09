@@ -35,6 +35,7 @@ export function ManageStudents(props: ManageStudentsProps) {
             <th scope="col">Parent 1</th>
             <th scope="col">Parent 2</th>
             <th scope="col">Parent 3</th>
+            <th scope="col">Student Status</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -47,9 +48,10 @@ export function ManageStudents(props: ManageStudentsProps) {
               <td>{s.parents.parentOne}</td>
               <td>{s.parents.parentTwo}</td>
               <td>{s.parents.parentThree}</td>
+              <td>{s.isActive ? 'Active' : 'Not Active'}</td>
               <td className="text-right">
                 <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.EDIT })} data-toggle="modal" data-target="#addStudentModal" type="button" className="btn btn-warning btn-sm mr-2 font-weight-bold">{<i className="fa fa-edit" aria-hidden="true"></i>} Edit</button>
-                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.VIEW })} data-toggle="modal" data-target=".detail-modal" type="button" className="btn btn-secondary btn-sm mr-0 font-weight-bold">{<i className="fa fa-user" aria-hidden="true"></i>} Details</button>
+                <button onClick={(e: any) => setAction(e, { id: s.id as number, action: DetailAction.VIEW })} data-toggle="modal" data-target=".detail-modal" type="button" className="btn btn-secondary btn-sm mr-2 font-weight-bold">{<i className="fa fa-user" aria-hidden="true"></i>} Details</button>
               </td>
             </tr>) :
             (<tr>
