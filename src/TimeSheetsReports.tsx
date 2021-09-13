@@ -102,9 +102,12 @@ interface TimeSheetReportProps {
   print: () => void
 }
 
-
 function TimeSheetReport(props: TimeSheetReportProps) {
-
+  const formatValue = (num: number) => num.toString().length < 2 ? '0' + num : num;
+  const d = new Date();
+  const dateString = `${d.getFullYear()}-${formatValue(d.getMonth() + 1)}-${formatValue(d.getDate())}`;
+  const [startDate, setStartDate] = useState<string>(dateString)
+  const [endDate, setEndDate] = useState<string>(dateString);
   const generateDownloadData = (timeSheets: TimeSheetRecord[] = []) => {
     return timeSheets.map((record, i) => ({
       '#': i + 1,
@@ -116,15 +119,42 @@ function TimeSheetReport(props: TimeSheetReportProps) {
     }));
   };
 
+  const parseDate = (dateString: string) => Date
+    .parse(Intl.DateTimeFormat('en-US')
+      .format(new Date(dateString)));
+
+  const filterTimeSheets = () => {
+    const formattedStartDate = startDate.replace('-', '/');
+    const formattedEndDate = endDate.replace('-', '/');
+
+    return props.timeSheets.filter(t => {
+      const parsedTimeSheetDate = parseDate(t.date);
+      const parsedStartDate = parseDate(formattedStartDate);
+      const parsedEndDate = parseDate(formattedEndDate);
+      return (parsedTimeSheetDate >= parsedStartDate && parsedTimeSheetDate <= parsedEndDate);
+    });
+  }
+
+  const filteredTimeSheets = filterTimeSheets();
+
   return (
     <div className="fade-in">
       <div className="d-flex justify-content-between">
         <h3 className="text-left h3">Time Sheet Reports</h3>
-        {props.timeSheets.length > 0 && <button onClick={props.print} className="btn btn-sm btn-success d-block d-print-none" type="button">
+        {filteredTimeSheets.length > 0 && <button onClick={props.print} className="btn btn-sm btn-success d-block d-print-none" type="button">
           <i className="fa fa-print" aria-hidden="true"></i> Print All Time Sheets
         </button>}
       </div>
-      {props.timeSheets.length ? props.timeSheets.map((timeSheet, index) => (
+      <div className="text-left d-print-none">
+        <label className="font-weight-bold" htmlFor="start">Start Date:</label>
+        <input onChange={(e: any) => setStartDate(e.target.value)} className="mx-2" type="date" id="start" name="start-date" value={startDate} min="2021-01-01" max={endDate ? endDate : "2050-01-01"} />
+        <label className="font-weight-bold" htmlFor="end">End Date:</label>
+        <input onChange={(e: any) => setEndDate(e.target.value)} className="mx-2" type="date" id="end" name="end-date" value={endDate} min={startDate ? startDate : "2021-01-01"} max="2050-01-01" />
+      </div>
+      <div className="text-left d-print-block d-none">
+        {filteredTimeSheets.length > 0 ? <p>Report Date Range: {filteredTimeSheets[0].date} to {filteredTimeSheets[filteredTimeSheets.length - 1].date}</p> : ''}
+      </div>
+      {filteredTimeSheets.length ? filteredTimeSheets.map((timeSheet, index) => (
         <div className="text-left d-print-none" key={index} >
           <p className="mb-2 mt-3">
             <button className="btn  btn-sm btn-outline-primary text-left mr-2 width-15" type="button" data-toggle="collapse" data-target={`#${timeSheet.id}`} aria-expanded="false" aria-controls={`#${timeSheet.id}`}>
@@ -137,7 +167,7 @@ function TimeSheetReport(props: TimeSheetReportProps) {
           </div>
         </div>)) : <p className='text-left'>Not time sheet report is available.</p>
       }
-      {props.timeSheets.length > 0 && props.timeSheets.map((timeSheet, index) => (
+      {filteredTimeSheets.length > 0 && filteredTimeSheets.map((timeSheet, index) => (
         <div className="text-left d-print-block d-none mt-3" key={index}>
           <h5 className="d-none d-print-block">{timeSheet.date}</h5>
           <TimeSheetReportCard records={timeSheet.timeSheetRecords} />
