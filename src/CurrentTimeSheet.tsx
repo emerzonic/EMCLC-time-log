@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TimeSheetRecord, StorageKeys, TimeSheet, Student } from './types';
-import { getTodayDate } from "./dateUtil";
+import { getTodayDate, parseDate } from "./dateUtil";
 import { SignInModal } from "./SignInModal";
 import { SortSetting, TimeSheetTable } from './TimeSheetTable';
 import { getItem, setItem } from './appStorageManager';
@@ -11,10 +11,10 @@ export interface CurrentTimeSheetProps {
   setSignal: (e: any) => void
 }
 export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
+  const [todayDate] = useState(getTodayDate());
   const [timeSheet, setTimeSheet] = useState<TimeSheet | undefined>(update());
   const [signal, setSignal] = useState(null);
   function update() {
-
     const timeSheets = getItem<TimeSheet[]>(StorageKeys.TIME_SHEETS) ?? [];
     const todayTimeSheet = timeSheets.find((timeSheet: TimeSheet) => timeSheet.date === getTodayDate());
 
@@ -24,12 +24,6 @@ export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
 
     let studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? [];
 
-    if (studentList.some(s => s.isActive === undefined)) {
-      studentList.forEach(s => s.isActive = true);
-      setItem(StorageKeys.STUDENT_LIST, studentList);
-      studentList = getItem<Student[]>(StorageKeys.STUDENT_LIST) ?? []
-    }
-
     if (studentList.length) {
       const records: TimeSheetRecord[] = studentList
         .filter(s => s.isActive)
@@ -38,15 +32,17 @@ export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
       if (records.length) {
         const newTimeSheet: TimeSheet = {
           id: Date.now(),
-          date: getTodayDate(),
+          date: todayDate,
           timeSheetRecords: records
         };
 
-        if (timeSheets.length === 20) {
-          timeSheets.shift();
-        }
+        const latestTimeSheets = timeSheets.filter(t => {
+          const timeSheetDate = parseDate(t.date);
+          const diff = Math.round((timeSheetDate - parseDate(todayDate)) / (1000 * 60 * 60 * 24));
+          return diff < 99;
+        });
 
-        const updatedTimeSheets = [...timeSheets, newTimeSheet];
+        const updatedTimeSheets = [...latestTimeSheets, newTimeSheet];
         setItem(StorageKeys.TIME_SHEETS, updatedTimeSheets);
         return newTimeSheet;
       }

@@ -3,6 +3,7 @@ import { TimeSheetRecord, StorageKeys, TimeSheet, Student } from './types';
 import { getItem } from './appStorageManager';
 import { CsvDownload } from './CsvDownload';
 import { sortDesending } from './utilities';
+import { parseDate } from './dateUtil';
 
 enum ReportView {
   ALL_TIME_SHEETS = 'allTimeSheets',
@@ -118,11 +119,7 @@ function TimeSheetReport(props: TimeSheetReportProps) {
       'Sign Out By': record.signOutParent ?? '-',
     }));
   };
-
-  const parseDate = (dateString: string) => Date
-    .parse(Intl.DateTimeFormat('en-US')
-      .format(new Date(dateString)));
-
+  
   const filterTimeSheets = () => {
     const formattedStartDate = startDate.replace('-', '/');
     const formattedEndDate = endDate.replace('-', '/');

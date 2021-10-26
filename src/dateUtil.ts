@@ -22,3 +22,6 @@ function generate(options: Intl.DateTimeFormatOptions, date?: Date) {
   return new Intl.DateTimeFormat('en-US', options).format(date ?? new Date());
 }
 
+export const parseDate = (dateString: string) => Date
+.parse(Intl.DateTimeFormat('en-US')
+  .format(new Date(dateString)));

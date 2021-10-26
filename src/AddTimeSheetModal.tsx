@@ -25,11 +25,6 @@ export function AddTimeLogModal(props: TimeSheetModalProps) {
   const handleSave = (e: any) => {
     const records: TimeSheetRecord[] = students.map(({ id, firstName, lastName }) => ({ id, firstName, lastName }) as TimeSheetRecord)
     const newTimeSheet: TimeSheet = { id: Date.now(), date, timeSheetRecords: records };
-
-    if (timeSheets.length === 10) {
-      timeSheets.shift();
-    }
-
     const updatedTimeSheets = [...timeSheets, newTimeSheet];
     setItem(StorageKeys.TIME_SHEETS, updatedTimeSheets);
     setInfo('A new time sheet has been created for today.');
