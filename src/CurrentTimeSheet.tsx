@@ -10,6 +10,7 @@ export interface CurrentTimeSheetProps {
   signal: any,
   setSignal: (e: any) => void
 }
+
 export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
   const [todayDate] = useState(getTodayDate());
   const [timeSheet, setTimeSheet] = useState<TimeSheet | undefined>(update());
@@ -60,6 +61,7 @@ export function CurrentTimeSheet(props: CurrentTimeSheetProps) {
   useEffect(() => {
     const timeSheet = update();
     setTimeSheet(timeSheet);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.signal])
 
   return (

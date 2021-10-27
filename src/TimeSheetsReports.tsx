@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TimeSheetRecord, StorageKeys, TimeSheet, Student } from './types';
-import { getItem } from './appStorageManager';
+import { getItem, setItem } from './appStorageManager';
 import { CsvDownload } from './CsvDownload';
 import { sortDesending } from './utilities';
 import { parseDate } from './dateUtil';
@@ -49,7 +49,11 @@ export function TimeSheetsReports(props: any) {
     };
   });
 
-  const print = () => window.print();
+  const print = () => {
+    window.print()
+    setItem(StorageKeys.REPORT_GENERATED, true);
+  };
+
   const toggleView = () => setReportView(reportView === ReportView.ALL_TIME_SHEETS ? ReportView.STUDENT_TIME_SHEET : ReportView.ALL_TIME_SHEETS);
 
   return (
@@ -83,7 +87,7 @@ function TimeSheetReportCard(props: TimeSheetReportCardProps) {
           </tr>
         </thead>
         <tbody>
-          {props.records.map((record, i) => (
+          {props.records.length > 0 ? props.records.map((record, i) => (
             <tr key={i}>
               <th scope="row">{i + 1}.</th>
               <td>{record.firstName} {record.lastName}</td>
@@ -91,7 +95,9 @@ function TimeSheetReportCard(props: TimeSheetReportCardProps) {
               <td>{record.signInParent}</td>
               <td>{record.signOutTime}</td>
               <td>{record.signOutParent}</td>
-            </tr>))}
+            </tr>)) : <tr>
+            <th scope="row">No record is available for this date.</th>
+          </tr>}
         </tbody>
       </table>
     </div>
@@ -119,7 +125,7 @@ function TimeSheetReport(props: TimeSheetReportProps) {
       'Sign Out By': record.signOutParent ?? '-',
     }));
   };
-  
+
   const filterTimeSheets = () => {
     const formattedStartDate = startDate.replace('-', '/');
     const formattedEndDate = endDate.replace('-', '/');
@@ -132,6 +138,7 @@ function TimeSheetReport(props: TimeSheetReportProps) {
     });
   }
 
+  const removeBlankRecords = (records: TimeSheetRecord[]) => records.filter(r => r.signInHour)
   const filteredTimeSheets = filterTimeSheets();
 
   return (
@@ -151,23 +158,26 @@ function TimeSheetReport(props: TimeSheetReportProps) {
       <div className="text-left d-print-block d-none">
         {filteredTimeSheets.length > 0 ? <p>Report Date Range: {filteredTimeSheets[0].date} to {filteredTimeSheets[filteredTimeSheets.length - 1].date}</p> : ''}
       </div>
-      {filteredTimeSheets.length ? filteredTimeSheets.map((timeSheet, index) => (
-        <div className="text-left d-print-none" key={index} >
-          <p className="mb-2 mt-3">
-            <button className="btn  btn-sm btn-outline-primary text-left mr-2 width-15" type="button" data-toggle="collapse" data-target={`#${timeSheet.id}`} aria-expanded="false" aria-controls={`#${timeSheet.id}`}>
-              {timeSheet.date}  <i className="fa fa-caret-down" aria-hidden="true"></i>
-            </button>
-            <CsvDownload data={generateDownloadData(timeSheet.timeSheetRecords)} title={`Time Sheet ${timeSheet.date}`} />
-          </p>
-          <div className={index === 0 ? "collapse show" : "collapse"} id={`${timeSheet.id}`}>
-            <TimeSheetReportCard records={timeSheet.timeSheetRecords} />
-          </div>
-        </div>)) : <p className='text-left'>Not time sheet report is available.</p>
+      {filteredTimeSheets.length ? filteredTimeSheets.map((timeSheet, index) => {
+        const timeSheetRecords = removeBlankRecords(timeSheet.timeSheetRecords);
+        return (
+          <div className="text-left d-print-none" key={index} >
+            <p className="mb-2 mt-3">
+              <button className="btn  btn-sm btn-outline-primary text-left mr-2 width-15" type="button" data-toggle="collapse" data-target={`#${timeSheet.id}`} aria-expanded="false" aria-controls={`#${timeSheet.id}`}>
+                {timeSheet.date}  <i className="fa fa-caret-down" aria-hidden="true"></i>
+              </button>
+              {timeSheetRecords.length > 0 && <CsvDownload data={generateDownloadData(timeSheetRecords)} title={`Time Sheet ${timeSheet.date}`} />}
+            </p>
+            <div className={index === 0 ? "collapse show" : "collapse"} id={`${timeSheet.id}`}>
+              <TimeSheetReportCard records={timeSheetRecords} />
+            </div>
+          </div>)
+      }) : <p className='text-left'>No time sheet report is available.</p>
       }
       {filteredTimeSheets.length > 0 && filteredTimeSheets.map((timeSheet, index) => (
         <div className="text-left d-print-block d-none mt-3" key={index}>
           <h5 className="d-none d-print-block">{timeSheet.date}</h5>
-          <TimeSheetReportCard records={timeSheet.timeSheetRecords} />
+          <TimeSheetReportCard records={removeBlankRecords(timeSheet.timeSheetRecords)} />
         </div>
       ))}
     </div>
@@ -227,7 +237,7 @@ function StudentReport(props: StudentReportProps) {
                   </tr>
                 </thead>
                 <tbody>
-                  {detail?.timeSheets.map((timeSheet: TimeSheetReportRecord, i: number) => (
+                  {detail?.timeSheets.filter(t => t.signInHour).map((timeSheet: TimeSheetReportRecord, i: number) => (
                     <tr key={i}>
                       <td>{i + 1}.</td>
                       <td>{timeSheet.date || '-'}</td>
@@ -258,7 +268,7 @@ function StudentReport(props: StudentReportProps) {
               </tr>
             </thead>
             <tbody>
-              {detail?.timeSheets.map((timeSheet: TimeSheetReportRecord, i: number) => (
+              {detail?.timeSheets.filter(t => t.signInHour).map((timeSheet: TimeSheetReportRecord, i: number) => (
                 <tr key={i}>
                   <td>{i + 1}.</td>
                   <td>{timeSheet.date || '-'}</td>

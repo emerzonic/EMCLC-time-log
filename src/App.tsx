@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AddStudentModal } from './AddStudentModal';
 import { AddTimeLogModal } from './AddTimeSheetModal';
 import { getItem, setItem } from './appStorageManager';
@@ -10,8 +10,10 @@ import { TimeSheetsReports } from './TimeSheetsReports';
 import './App.css';
 import { getTodayDate } from './dateUtil';
 import { DigitalClock } from './DigitalClock';
+import { ReportReminderComponent } from './ReportReminder';
 
 function App() {
+  const [isModelOpen, setIsModalOpen] = useState(false);
   const [view, setView] = useState<View>(() => {
     const currentView = getItem<View>(StorageKeys.VIEW);
     if (currentView) {
@@ -29,6 +31,26 @@ function App() {
   const updateView = (view: View) => {
     setItem(StorageKeys.VIEW, view);
     setView(view);
+  }
+
+  useEffect(() => {
+    const date = getTodayDate();
+    const isGenerated = getItem<boolean>(StorageKeys.REPORT_GENERATED) ?? false;
+    const isReportDay = date.includes('Monday');
+
+    if (!isReportDay && isGenerated) {
+      setItem(StorageKeys.REPORT_GENERATED, false);
+    }
+
+    if (isReportDay && !isGenerated) {
+      setIsModalOpen(true);
+    }
+  }, []);
+
+  const handleAction = () => {
+    setItem(StorageKeys.VIEW, View.REPORTS);
+    setIsModalOpen(false);
+    setView(View.REPORTS)
   }
 
   return (
@@ -52,6 +74,7 @@ function App() {
       </div>
       <AddStudentModal setView={updateView} signal={singnal} setSignal={setSignal} />
       <AddTimeLogModal setSignal={setSignal} setView={updateView} singnal={singnal} />
+      <ReportReminderComponent isOpen={isModelOpen} handleAction={handleAction} setIsModalOpen={setIsModalOpen} />
     </div>
   );
 }

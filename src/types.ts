@@ -69,4 +69,5 @@ export enum StorageKeys {
   STUDENT_LIST = '__$studentList',
   DETAIL_ACTION = '__$detailActionPayload',
   VIEW = '__$time_sheet_view',
+  REPORT_GENERATED = '__$report_generated',
 }
